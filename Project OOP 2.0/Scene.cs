@@ -58,7 +58,7 @@ namespace Project_OOP_2._0
             Console.WriteLine();
         }
 
-        //Polymorphism: Method Overloading
+        //POLYMORPHISM: Method Overloading
         public void delayedText(string text, int speed, string textColor, string resetColor, bool newLine)
         {
             Console.Write(textColor);
@@ -130,7 +130,7 @@ namespace Project_OOP_2._0
             displayItemsAvailable(houseSpace);
         }
 
-        public void exploreHouse(GameEngine engine)
+        public virtual void exploreHouse(GameEngine engine)
         {
             Console.WriteLine($"\n[Current Location: {engine.mainCharacterCat.currentLocation?.Name ?? "Not set"}]");
             Console.WriteLine();
@@ -264,7 +264,7 @@ namespace Project_OOP_2._0
                     throw new InvalidOperationException("Invalid input!!!");
                 }
             }
-            catch (Exception ex) // Memenuhi rubrik Exception Handling
+            catch (Exception ex) //Exception Handling
             {
                 Console.WriteLine($"Error: {ex.Message}. Please try again");
             }

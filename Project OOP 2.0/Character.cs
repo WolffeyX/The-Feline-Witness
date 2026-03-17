@@ -24,7 +24,7 @@ namespace Project_OOP_2._0
             //Or in another word , it checks whether there are any key presses that have been made by the user but have not yet been read by the program. If there are key presses available in the input stream, it returns true; otherwise, it returns false.
             //Input stream is the buffer that holds the key presses until they are read by the program. When a key is pressed, it is stored in the input stream until the program reads it using Console.ReadKey() or similar methods. If there are any key presses in the input stream, Console.KeyAvailable will return true, indicating that there is a key press available to be read. If there are no key presses in the input stream, it will return false.
             //Console.ReadKey(true) method is used to READ A KEY PRESS IN THE INPUT STREAM. The true parameter indicates that the key press should not be displayed in the console. When this method is called, it will read the next key press from the input stream and return it as a ConsoleKeyInfo object. If there are no key presses available in the input stream, it will block until a key press is available.
-            //This block of code is like this "read and discard the key input in the Input Stream while there is a key input in the InputStram"
+            //This block of code is like this "read and discard the key input in the Input Stream while there is a key input in the InputStream"
             //This effectively clears the input buffer of any key presses that may have been made by the user before calling this method, ensuring that any subsequent key presses will be processed correctly without interference from previous inputs.
             while (Console.KeyAvailable)
             {
@@ -69,7 +69,22 @@ namespace Project_OOP_2._0
             Bury,
             Claw,
             Shove,
-            Attack
+            Scatter
+        }
+        
+        public enum FightingOptions
+        {
+            Claw,
+            Kick,
+            Bite,
+            //Can add one more fighting option here if you want or change above options as well.
+        }
+
+        public StatusIndicator HealthStatus { get; set; }
+
+        public Cat() 
+        {
+            HealthStatus = new StatusIndicator(100);
         }
     }
 
@@ -77,6 +92,7 @@ namespace Project_OOP_2._0
     {
         //Properties
         public HouseSpace currentLocation { get; set; }
+        public SecondaryItem cucarryingItem { get; set; }
 
     }
 }

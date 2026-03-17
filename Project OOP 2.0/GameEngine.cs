@@ -103,7 +103,7 @@ namespace Project_OOP_2._0
 
             //Kitchen
             HouseSpace Kitchen = new HouseSpace("Kitchen");
-            PrimaryItem KitchenLaundryBasket = new PrimaryItem("Laudry Basket", Kitchen.Name);
+            PrimaryItem KitchenLaundryBasket = new PrimaryItem("Laundry Basket", Kitchen.Name);
             PrimaryItem KitchenFridge = new PrimaryItem("Fridge", Kitchen.Name);
             PrimaryItem KitchenOven = new PrimaryItem("Oven", Kitchen.Name);
             PrimaryItem KitchenSink = new PrimaryItem("Sink", Kitchen.Name);
