@@ -9,8 +9,29 @@ namespace Project_OOP_2._0
 {
     internal class Character
     {
+        private int hp;
+
         //Properties
         public string Name { get; set; }
+        public int HP
+        {
+            get { return hp; }
+            set
+            {
+                if (value > 100)
+                {
+                    hp = 100;
+                }
+                else if (value < 0)
+                {
+                    hp = 0;
+                }
+                else
+                {
+                    hp = value;
+                }
+            }
+        }
 
         //Methods
         public void displayDialogue(string text, int speed, string textColor, string resetColor)
@@ -80,11 +101,29 @@ namespace Project_OOP_2._0
             //Can add one more fighting option here if you want or change above options as well.
         }
 
-        public StatusIndicator HealthStatus { get; set; }
+        //private actionType catActionType;
+        private FightingOptions catFightingOptions;
 
-        public Cat() 
+        //public actionType ActionType
+        //{
+        //    get { return catActionType; }
+        //    set { catActionType = value; }
+        //}
+
+        public FightingOptions CatFightingOptions
         {
-            HealthStatus = new StatusIndicator(100);
+            get { return catFightingOptions; }
+            set { catFightingOptions = value; }
+        }
+
+
+
+
+        //public StatusIndicator HealthStatus { get; set; }
+
+        public Cat()
+        {
+            HP = 100;
         }
     }
 

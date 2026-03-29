@@ -15,11 +15,16 @@ namespace Project_OOP_2._0
         public Character husband;
         public Character wife;
         public Character mistress;
+        public Cat greyCat;
+        public Cat whiteCat;
         public List<HouseSpace> HouseSpaceList = new List<HouseSpace>();
         public IntroScene intro;
         public Scene1 scene1;
+        public Scene2 scene2;
         public Scene3 scene3;
         public Scene4 scene4;
+        public Scene5 scene5;
+        public Scene6 scene6;
 
         public GameEngine()//No issue (understood)
         {
@@ -28,11 +33,16 @@ namespace Project_OOP_2._0
             husband = new Character();
             wife = new Character();
             mistress = new Character();
+            greyCat = new Cat();
+            whiteCat = new Cat();
             this.SetupHouseItems(); // Call the method to setup all the items in the house here
             intro = new IntroScene("Intro");
             scene1 = new Scene1("Scene 1");
+            scene2 = new Scene2("Scene 2");
             scene3 = new Scene3("Scene 3");
             scene4 = new Scene4("Scene 4");
+            scene5 = new Scene5("Scene 5");
+            scene6 = new Scene6("Scene 6");
         }
 
         public void SetupHouseItems()
@@ -107,7 +117,7 @@ namespace Project_OOP_2._0
 
             //Kitchen
             HouseSpace Kitchen = new HouseSpace("Kitchen");
-            PrimaryItem KitchenLaundryBasket = new PrimaryItem("Laundry Basket", Kitchen.Name);
+            PrimaryItem KitchenLaundryBasket = new PrimaryItem("Laundry Basket with stack of clothes", Kitchen.Name);
             PrimaryItem KitchenFridge = new PrimaryItem("Fridge", Kitchen.Name);
             PrimaryItem KitchenOven = new PrimaryItem("Oven", Kitchen.Name);
             PrimaryItem KitchenSink = new PrimaryItem("Sink", Kitchen.Name);
@@ -183,10 +193,13 @@ namespace Project_OOP_2._0
 
         public void playGame()
         {
-            intro.playScene(this);
-            scene1.playScene(this);
+            //intro.playScene(this);
+            //scene1.playScene(this);
+            scene2.playScene(this);
             scene3.playScene(this);
             scene4.playScene(this);
+            scene5.playScene(this);
+            scene6.playScene(this);
         }
     }
 }
