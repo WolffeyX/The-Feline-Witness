@@ -1000,4 +1000,111 @@ namespace Project_OOP_2._0
             delayedText($"End of Scene 4...", 50, resetColorField, resetColorField);
         }
     }
+    internal class Scene6 : Scene
+    {
+        public Scene6(string givenName)
+        {
+            Name = givenName;
+        }
+
+        public override void playScene(GameEngine engine)
+        {
+            string scene6Banner = @"
+             =======================================================
+                          SCENE 6: A NEW BEGINNING
+             =======================================================
+            ";
+
+            string Tangerine = "\x1b[38;2;255;153;51m";
+            string SoftBlue = "\x1b[38;2;135;206;235m]";
+
+            delayedText(scene6Banner, 10, resetColorField, resetColorField);
+            Console.ReadLine();
+            delayedText("One Month Later...", 100, resetColorField, resetColorField);
+            Console.ReadLine();
+            Console.Clear();
+
+            delayedText($"The atmosphere in the new apartment still felt foreign.", 50, resetColorField, resetColorField);
+            delayedText($"The smell of fresh paint mixed with the scent of cardboard boxes that hadn't been fully unpacked.", 50, resetColorField, resetColorField);
+            delayedText($"This living room was smaller than the old house, but for some reason, the air felt lighter and less suffocating.", 50, resetColorField, resetColorField);
+            Console.ReadLine();
+
+            delayedText($"{engine.mainCharacterCat.Name} sat on top of a box, staring out the window at a cityscape he didn't recognize.", 50, resetColorField, resetColorField);
+            delayedText($"He no longer saw the garden of the old house. Only tall buildings.", 50, resetColorField, resetColorField);
+            Console.ReadLine();
+
+            delayedText($"{engine.mainCharacterCat.Name} recalled who {engine.mistress.Name} really was.", 50, resetColorField, resetColorField);
+            delayedText($"During the huge argument on the night of the incident, it was revealed that {engine.mistress.Name} was actually {engine.husband.Name}'s old friend from university.", 50, resetColorField, resetColorField);
+            Console.ReadLine();
+            delayedText($"They had 'found' each other again on social media three months ago.", 50, resetColorField, resetColorField);
+            delayedText($"It started with liking pictures, then commenting, and finally led to secret meetings at {engine.husband.Name}'s favorite cafe—", 50, resetColorField, resetColorField);
+            delayedText($"the same cafe where {engine.husband.Name} had taken {engine.wife.Name} when they first started dating.", 50, resetColorField, resetColorField);
+            Console.ReadLine();
+            delayedText($"Turns out, {engine.husband.Name} was trying to relive his old romance, but with a different woman.", 50, resetColorField, resetColorField);
+            Console.ReadLine();
+
+            delayedText($"{engine.mistress.Name} wasn't a total stranger; she was the past that {engine.husband.Name} chose to make his future,", 50, resetColorField, resetColorField);
+            delayedText($"destroying the present he had built with {engine.wife.Name}.", 50, resetColorField, resetColorField);
+            Console.ReadLine();
+
+            delayedText($"{engine.mainCharacterCat.Name} meowed softly. His heart felt heavy.", 70, resetColorField, resetColorField);
+            Console.ReadLine();
+
+            delayedText($"Truthfully, {engine.mainCharacterCat.Name} was sad. What cat wouldn't be sad seeing his family broken apart?", 50, resetColorField, resetColorField);
+            delayedText($"He missed the times {engine.husband.Name} stroked his head while watching football.", 50, resetColorField, resetColorField);
+            delayedText($"He missed the couple's laughter that once filled the living room.", 50, resetColorField, resetColorField);
+            Console.ReadLine();
+
+            delayedText($"But {engine.mainCharacterCat.Name} knew he couldn't let the deception continue.", 50, resetColorField, resetColorField);
+            delayedText($"He couldn't bear to see {engine.wife.Name}—the owner who loved him the most, who fed him, who nursed him when he was sick—living in a lie.", 50, resetColorField, resetColorField);
+            Console.ReadLine();
+            delayedText($"To {engine.mainCharacterCat.Name}, loyalty was everything.", 70, resetColorField, resetColorField);
+            delayedText($"If the Head of the House was willing to betray that trust, he didn't deserve to be part of the family anymore.", 50, resetColorField, resetColorField);
+            Console.ReadLine();
+            delayedText($"Let this home be a little quieter, as long as there was no more betrayal.", 50, resetColorField, resetColorField);
+            Console.ReadLine();
+            Console.Clear();
+
+            delayedText($"The door opened.", 70, resetColorField, resetColorField);
+            delayedText($"{engine.wife.Name} walked in.", 50, resetColorField, resetColorField);
+            delayedText($"Her face looked calmer than it had in weeks, even though her eyes were still slightly puffy.", 50, resetColorField, resetColorField);
+            delayedText($"She saw {engine.mainCharacterCat.Name} sitting quietly on the box by the window.", 50, resetColorField, resetColorField);
+            Console.ReadLine();
+
+            engine.wife.displayDialogue($"\"{engine.mainCharacterCat.Name}...\"", 80, resetColorField, resetColorField);
+            Console.ReadLine();
+
+            delayedText($"{engine.mainCharacterCat.Name} trotted over to {engine.wife.Name}, rubbing his body gently against her legs.", 50, resetColorField, resetColorField);
+            Console.ReadLine();
+
+            delayedText($"{engine.wife.Name} picked {engine.mainCharacterCat.Name} up and hugged him tight.", 50, resetColorField, resetColorField);
+            engine.wife.displayDialogue($"\"Now it's just the two of us, {engine.mainCharacterCat.Name}.\"", 60, resetColorField, resetColorField);
+            engine.wife.displayDialogue($"\"Thank you for 'telling' Mama that day. If you hadn't... who knows how long I would have been fooled.\"", 60, resetColorField, resetColorField);
+            Console.ReadLine();
+
+            delayedText($"{engine.wife.Name} kissed {engine.mainCharacterCat.Name} softly on the head.", 50, resetColorField, resetColorField);
+            Console.ReadLine();
+            delayedText($"Outside the window, a light rain began to fall...", 70, resetColorField, resetColorField);
+            delayedText($"...as if washing away all the dirt and bitter memories of the old house,", 50, resetColorField, resetColorField);
+            delayedText($"giving them both a chance to start a new life.", 50, resetColorField, resetColorField);
+            Console.ReadLine();
+
+            delayedText($"{engine.mainCharacterCat.Name} closed his eyes, feeling safe in his owner's arms.", 60, resetColorField, resetColorField);
+            delayedText($"He knew he had done the right thing.", 80, resetColorField, resetColorField);
+            Console.ReadLine();
+            Console.Clear();
+
+            string ending = @"
+             =======================================================
+
+                               ~ T H E   E N D ~
+
+                    Thank you for playing The Feline Witness.
+
+             =======================================================
+            ";
+            delayedText(ending, 40, Tangerine, resetColorField);
+            Console.ReadLine();
+        }
+    }
 }

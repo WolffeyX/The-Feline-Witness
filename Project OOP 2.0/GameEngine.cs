@@ -20,6 +20,7 @@ namespace Project_OOP_2._0
         public Scene1 scene1;
         public Scene3 scene3;
         public Scene4 scene4;
+        public Scene6 scene6;
 
         public GameEngine()//No issue (understood)
         {
@@ -33,6 +34,7 @@ namespace Project_OOP_2._0
             scene1 = new Scene1("Scene 1");
             scene3 = new Scene3("Scene 3");
             scene4 = new Scene4("Scene 4");
+            scene6 = new Scene6("Scene 6");
         }
 
         public void SetupHouseItems()
@@ -187,6 +189,7 @@ namespace Project_OOP_2._0
             scene1.playScene(this);
             scene3.playScene(this);
             scene4.playScene(this);
+            scene6.playScene(this);
         }
     }
 }
