@@ -96,7 +96,7 @@ namespace Project_OOP_2._0
         }
 
         public void getName(Character charac, string objectName)
-        { 
+        {
             bool isNameValid = false;
             do
             {
@@ -123,11 +123,10 @@ namespace Project_OOP_2._0
             }
         }
 
+
         public void goTo(HouseSpace houseSpace)
         {
             delayedText($"Going to {houseSpace.Name} .....", 50, resetColorField, resetColorField);
-            Console.WriteLine($"Available items/furnitures in {houseSpace.Name}:\n");
-            displayItemsAvailable(houseSpace);
         }
 
         public virtual void exploreHouse(GameEngine engine)
@@ -239,7 +238,7 @@ namespace Project_OOP_2._0
                             {
                                 ActionType selectedAction = actions[actionChoice - 1];
                                 ValidateActionResult = validateAction(selectedSecondary, selectedAction);
-                                if ( ValidateActionResult == false)
+                                if (ValidateActionResult == false)
                                 {
                                     Console.WriteLine("Invalid action / Nothing to do here");
                                 }
@@ -275,7 +274,8 @@ namespace Project_OOP_2._0
             // This method will be overridden by the child class to play the scene
         }
 
-        public virtual bool validateAction(SecondaryItem item, ActionType action) { 
+        public virtual bool validateAction(SecondaryItem item, ActionType action)
+        {
             return false; //Please overrride this
         }
     }
@@ -357,7 +357,7 @@ namespace Project_OOP_2._0
 
         public override void playScene(GameEngine engine)
         {
-            
+
             string scene1 = @"
              =======================================================
                             SCENE 1: SUSPICIOUS
@@ -440,7 +440,7 @@ namespace Project_OOP_2._0
                 $"and then perhaps we can watch Netflix together...\"", 50, resetColorField, resetColorField);
             engine.husband.displayDialogue($"\"I really wanna see you\"", 50, resetColorField, resetColorField);
             Console.ReadLine();
-           engine.mistress.displayDialogue($"\"Umm, yeah, sounds interesting. Is it the same location you shared before? What time can I come?\"", 50, resetColorField, resetColorField);
+            engine.mistress.displayDialogue($"\"Umm, yeah, sounds interesting. Is it the same location you shared before? What time can I come?\"", 50, resetColorField, resetColorField);
             engine.husband.displayDialogue($"\"Yes same location. Is 3 PM okay?\"", 50, resetColorField, resetColorField);
             Console.ReadLine();
             engine.mistress.displayDialogue($"\"3 PM is perfect. See you there.. ;)\"", 50, resetColorField, resetColorField);
@@ -652,6 +652,15 @@ namespace Project_OOP_2._0
              =======================================================
             ";
             delayedText(header, 10, Tangerine, reset);
+            var garageSpace = engine.HouseSpaceList.FirstOrDefault(space => space.Name == "Garage");
+            if (garageSpace != null)
+            {
+                var husbandCar = garageSpace.itemsAvailable.FirstOrDefault(item => item.Name == "Husband Car");
+                if (husbandCar != null)
+                {
+                    garageSpace.itemsAvailable.Remove(husbandCar);
+                }
+            }
 
             delayedText($"{engine.mainCharacterCat.Name} said to himself, \"Oh, that wasn't enough. I need to do something else to cancel this meeting...\"", 50, reset, reset);
             delayedText($"{engine.mainCharacterCat.Name} roamed the house looking for another distraction.", 50, reset, reset);
@@ -720,6 +729,275 @@ namespace Project_OOP_2._0
             }
             Console.WriteLine("\n *ZRUPPPP* \n");
             Thread.Sleep(500);
+        }
+    }
+
+    internal class Scene4 : Scene
+    {
+        //Constructor
+        public Scene4(string givenName)
+        {
+            Name = givenName;
+        }
+
+        public override bool validateAction(SecondaryItem item, ActionType action)
+        {
+            bool isValid = false;
+            if (item.Name == "Grocery Bag" && action == ActionType.Shove)
+            {
+                isValid = true;
+            }
+            return isValid;
+        }
+
+
+        public override void exploreHouse(GameEngine engine)
+        {
+            Console.WriteLine($"\n[Current Location: {engine.mainCharacterCat.currentLocation?.Name ?? "Not set"}]");
+            Console.WriteLine();
+            Console.Write("Press 'M' to display the house map, 'E' to identify available primary(main) items in the current location, and 'C' to go to another location: ");
+            try //if the user input is not M, E, or C, throw an exception and catch it in the catch block, then prompt the user to try again
+            {
+                char input = char.ToUpper(Console.ReadKey().KeyChar);
+                Console.WriteLine();
+
+                if (input == 'M')
+                {
+                    Console.WriteLine("===========================================================================");
+                    Console.WriteLine("\nHOUSE MAP:");
+                    engine.house.displayMap();
+                    Console.WriteLine("===========================================================================");
+                    Console.WriteLine("\n");
+                }
+                else if (input == 'C')
+                {
+                    Console.WriteLine("\n");
+                    Console.WriteLine($"[Current Location: {engine.mainCharacterCat.currentLocation.Name}]\n");
+                    Console.WriteLine($"Available locations (rooms/space) in the house:\n");
+                    for (int i = 0; i < engine.HouseSpaceList.Count; i++)
+                    {
+                        Console.WriteLine($"{i + 1}. {engine.HouseSpaceList[i].Name}");
+                    }
+                    Console.WriteLine();
+                    Console.Write("Select room/space number to go to: ");
+
+                    if (int.TryParse(Console.ReadLine(), out int roomChoice) && roomChoice >= 1 && roomChoice <= engine.HouseSpaceList.Count)
+                    {
+                        HouseSpace selectedRoom = engine.HouseSpaceList[roomChoice - 1];
+                        goTo(selectedRoom);
+                        engine.mainCharacterCat.currentLocation = selectedRoom; // Update current location after moving
+                    }
+                    else
+                    {
+                        Console.WriteLine("Invalid room selection.");
+                    }
+                }
+                else if (input == 'E')
+                {
+                    var currentRoom = engine.mainCharacterCat.currentLocation;
+                    if (currentRoom == null || currentRoom.itemsAvailable.Count == 0)
+                    {
+                        Console.WriteLine("There is nothing to explore here.");
+                        return;
+                    }
+
+                    // 1. Listing down all primary items in the current location
+                    Console.WriteLine($"\n");
+                    Console.WriteLine($"Available items/furnitures in {currentRoom.Name}:\n");
+                    displayItemsAvailable(currentRoom);
+                    Console.Write("Select item number to inspect: ");
+
+                    if (int.TryParse(Console.ReadLine(), out int pItemChoice) && pItemChoice >= 1 && pItemChoice <= currentRoom.itemsAvailable.Count)
+                    
+                    {
+                        // Kita kena cast sebagai PrimaryItem untuk akses list SecondaryItem di dalamnya
+                        var selectedPrimary = currentRoom.itemsAvailable[pItemChoice - 1] as PrimaryItem;
+                        delayedText($"Selected Item: {selectedPrimary.Name} ", 30, resetColorField, resetColorField);
+                        delayedText($"Going to {selectedPrimary.Name} .....", 50, resetColorField, resetColorField);
+
+                        if (selectedPrimary == null || selectedPrimary.AvailableSecondaryItem.Count == 0)
+                        {
+                            Console.WriteLine("Nothing to do here. (No usable items on/approximate to this item)");
+                            return;
+                        }
+
+                        // 2. Senaraikan Secondary Item
+                        Console.WriteLine($"\nItems found on/at {selectedPrimary.Name}:\n");
+                        for (int i = 0; i < selectedPrimary.AvailableSecondaryItem.Count; i++)
+                        {
+                            Console.WriteLine($"{i + 1}. {selectedPrimary.AvailableSecondaryItem[i].Name}");
+                        }
+                        Console.Write("Select item to interact with: ");
+
+                        if (int.TryParse(Console.ReadLine(), out int sItemChoice) && sItemChoice >= 1 && sItemChoice <= selectedPrimary.AvailableSecondaryItem.Count)
+                        {
+                            var selectedSecondary = selectedPrimary.AvailableSecondaryItem[sItemChoice - 1];
+                            delayedText($"Selected Item: {selectedSecondary.Name} ", 30, resetColorField, resetColorField);
+
+                            // 3. Senaraikan Action yang wujud dalam Enum ActionType
+                            Console.WriteLine($"\nWhat do you want to do with {selectedSecondary.Name}?\n");
+                            var actions = Enum.GetValues(typeof(ActionType)).Cast<ActionType>().ToList();
+                            //Enum.GetValues(typeof(ActionType)) : This method retrieves an array of the values of the constants in the specified enumeration (ActionType).
+                            //Cast<ActionType>() : After getting the values in the array, that are casted to ActionType
+                            //ToList() : The casted values are then converted into a List<ActionType> for easier manipulation.
+                            //
+                            for (int i = 0; i < actions.Count; i++)
+                            {
+                                Console.WriteLine($"{i + 1}. {actions[i]}");
+                            }
+                            Console.Write("Select action number: ");
+
+                            if (int.TryParse(Console.ReadLine(), out int actionChoice) && actionChoice >= 1 && actionChoice <= actions.Count)
+                            {
+                                ActionType selectedAction = actions[actionChoice - 1];
+                                ValidateActionResult = validateAction(selectedSecondary, selectedAction);
+                                if (ValidateActionResult == false)
+                                {
+                                    Console.WriteLine("\nInvalid action / Nothing to do here");
+                                }
+                            }
+                            else
+                            {
+                                Console.WriteLine("Invalid action selection.");
+                            }
+                        }
+                        else
+                        {
+                            Console.WriteLine("Invalid secondary item selection.");
+                        }
+                    }
+                    else
+                    {
+                        Console.WriteLine("Invalid item selection.");
+                    }
+                }
+                else
+                {
+                    throw new InvalidOperationException("Invalid input!!!");
+                }
+            }
+            catch (Exception ex) //Exception Handling
+            {
+                Console.WriteLine($"Error: {ex.Message}. Please try again");
+            }
+        }
+
+        public override void playScene(GameEngine engine)
+        {
+            string scene4 = @"
+             =======================================================
+                          SCENE 4: THE EGGS & THE CAGE
+             =======================================================
+            ";
+
+            // unhide GarageHusbandCar
+            var garage = engine.HouseSpaceList.FirstOrDefault(space => space.Name == "Garage");
+            var husbandCar = garage.itemsAvailable.FirstOrDefault(item => item.Name == "HusbandCar");
+            if (husbandCar != null)
+            {
+                //husbandCar.IsHidden = false; // unhide
+            }
+
+            // add grocery bag
+            // cari Kitchen asal dari game engine
+            var kitchen = engine.HouseSpaceList.FirstOrDefault(space => space.Name == "Kitchen");
+
+            // cari bar table asal
+            var kitchenBarTable = kitchen.itemsAvailable.FirstOrDefault(item => item.Name == "Bar Table") as PrimaryItem;
+
+            // tambah grocery bag ke bar table asal
+            SecondaryItem groceryBag = new SecondaryItem("Grocery Bag", kitchen.Name);
+            kitchenBarTable.AvailableSecondaryItem.Add(groceryBag);
+
+            delayedText(scene4, 10, resetColorField, resetColorField);
+
+            delayedText($"Upon returning home, {engine.husband.Name} was shocked to see cat food scattered all over the garage floor", 50, resetColorField, resetColorField);
+
+            engine.husband.displayDialogue($"\"Hah! How did the cat food bag get torn? And it's everywhere!\"", 50, resetColorField, resetColorField);
+
+            Console.ReadLine();
+
+            delayedText($"After parking, he entered the house holding the grocery bags. He saw {engine.mainCharacterCat.Name} sitting on his mat, stiff, pretending not to look. " +
+                $"{engine.husband.Name} put the groceries in the kitchen, then picked {engine.mainCharacterCat.Name} up and looked him in the eye.", 50, resetColorField, resetColorField);
+
+            engine.husband.displayDialogue($"\"{engine.mainCharacterCat.Name} did you tear the food bag and make a mess?\"", 50, resetColorField, resetColorField);
+
+            Console.ReadLine();
+
+            delayedText($"{engine.mainCharacterCat.Name} just meowed, effectively admitting it in cat language.", 50, resetColorField, resetColorField);
+
+            engine.husband.displayDialogue($"\"It must be you, {engine.mainCharacterCat.Name}." +
+                $" Who else would it be?\"", 50, resetColorField, resetColorField);
+
+            Console.ReadLine();
+
+            delayedText($"{engine.husband.Name} said sternly. Then his voice softened.", 50, resetColorField, resetColorField);
+
+            engine.husband.displayDialogue($"\"Sigh, {engine.mainCharacterCat.Name}, {engine.mainCharacterCat.Name}... why are you acting up today?\"", 50, resetColorField, resetColorField);
+
+            Console.ReadLine();
+
+            delayedText($"He put {engine.mainCharacterCat.Name} down and grabbed a broom to clean the garage.", 50, resetColorField, resetColorField);
+
+            delayedText($"Seizing the oppurtunity while {engine.husband.Name} swept the garage, it wanted to create another mess at another place.", 50, resetColorField, resetColorField);
+
+            Console.Clear();
+
+            Console.WriteLine("\n===========================================================================");
+            Console.WriteLine($"MISSION: The player needs to create a mess at one of the house space again.");
+            Console.WriteLine("===========================================================================\n");
+
+            engine.mainCharacterCat.currentLocation = engine.HouseSpaceList[5]; // remove this later
+
+            do
+            {
+                exploreHouse(engine);
+            } while (ValidateActionResult == false);
+
+            ValidateActionResult = false; // reset the ValidateActionResult for the next use in this scene
+            Console.WriteLine();
+            delayedText($"It saw a carton of eggs inside the grocery bag, located on top of the bar table.", 50, resetColorField, resetColorField);
+            Console.Clear();
+
+            delayedText($"With all his might, it leaped and shoved the GroceryBag off the kitchen's bar table.", 50, resetColorField, resetColorField);
+
+            delayedText($"SPLAT.", 50, resetColorField, resetColorField);
+
+            delayedText($"{engine.husband.Name} snapped.", 50, resetColorField, resetColorField);
+
+            engine.husband.displayDialogue($"\"{engine.mainCharacterCat.Name}!! What is wrong with you?! Argh... why are you so aggressive today? Tearing food bag, now breaking the eggs!\"",
+                50, resetColorField, resetColorField);
+
+            delayedText($"{engine.mainCharacterCat.Name} only replied,", 50, resetColorField, resetColorField);
+
+            engine.mainCharacterCat.displayDialogue($"\"Meow.\"", 50, resetColorField, resetColorField);
+
+            engine.husband.displayDialogue($"\"Sorry but Papa has to put you in the cage for a while.\"", 50, resetColorField, resetColorField);
+
+            delayedText($"{engine.mainCharacterCat.Name} was placed in the cage located in the garage. Even though the cage was spacious with two levels, {engine.mainCharacterCat.Name} was trapped." +
+                $"He could no longer interfere.", 50, resetColorField, resetColorField);
+
+            delayedText($"After locking the cage,{engine.husband.Name} took out his phone and called {engine.mistress.Name}.", 50, resetColorField, resetColorField);
+
+            engine.mistress.displayDialogue($"\"Hey babe, I had some issues earlier... I'm just starting to bake now. Can you come a bit later? Maybe 5 PM?\"", 50, resetColorField, resetColorField);
+
+            engine.husband.displayDialogue($"\"Oh, okay...\"", 50, resetColorField, resetColorField);
+
+            engine.mistress.displayDialogue($"\"Okay baby, bye...\"", 50, resetColorField, resetColorField);
+
+            delayedText($"{engine.mainCharacterCat.Name} heard the conversation.", 50, resetColorField, resetColorField);
+
+            engine.mainCharacterCat.displayDialogue($"\"So {engine.mistress.Name} will arrive at 5 PM...\"", 50, resetColorField, resetColorField);
+
+            delayedText($"he thought.", 50, resetColorField, resetColorField);
+
+            engine.mainCharacterCat.displayDialogue($"\"There is nothing else I can do now.\"", 50, resetColorField, resetColorField);
+
+            delayedText($"{engine.husband.Name} went to the kitchen and started baking.", 50, resetColorField, resetColorField);
+
+            engine.mainCharacterCat.currentLocation = engine.HouseSpaceList[6]; // player moves to the garage
+
+            delayedText($"End of Scene 4...", 50, resetColorField, resetColorField);
         }
     }
 }
