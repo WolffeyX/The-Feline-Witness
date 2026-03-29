@@ -18,6 +18,7 @@ namespace Project_OOP_2._0
         public List<HouseSpace> HouseSpaceList = new List<HouseSpace>();
         public IntroScene intro;
         public Scene1 scene1;
+        public Scene3 scene3;
 
         public GameEngine()//No issue (understood)
         {
@@ -29,6 +30,7 @@ namespace Project_OOP_2._0
             this.SetupHouseItems(); // Call the method to setup all the items in the house here
             intro = new IntroScene("Intro");
             scene1 = new Scene1("Scene 1");
+            scene3 = new Scene3("Scene 3");
         }
 
         public void SetupHouseItems()
@@ -146,10 +148,23 @@ namespace Project_OOP_2._0
 
             //Garage
             HouseSpace Garage = new HouseSpace("Garage");
-            PrimaryItem GarageHusbandCar = new PrimaryItem("HusbandCar", Garage.Name);
-            PrimaryItem GarageWifeCar = new PrimaryItem("WifeCar", Garage.Name);
+
+            PrimaryItem GarageHusbandCar = new PrimaryItem("Husband Car", Garage.Name);
+            SecondaryItem HCTires = new SecondaryItem("Tires", Garage.Name);
+            GarageHusbandCar.AvailableSecondaryItem.Add(HCTires);
+            
+            PrimaryItem GarageWifeCar = new PrimaryItem("Wife Car", Garage.Name);
+            SecondaryItem WCTires = new SecondaryItem("Tires", Garage.Name);
+            GarageWifeCar.AvailableSecondaryItem.Add(WCTires);
+
             PrimaryItem GarageCatCage = new PrimaryItem("Cat Cage", Garage.Name);
+            SecondaryItem CageDoor = new SecondaryItem("Cage Door", Garage.Name);
+            GarageCatCage.AvailableSecondaryItem.Add(CageDoor);
+
             PrimaryItem GarageCatFoodSack = new PrimaryItem("Cat Food Sack", Garage.Name);
+            SecondaryItem sackOpening = new SecondaryItem("Sack Opening", Garage.Name);
+            GarageCatFoodSack.AvailableSecondaryItem.Add(sackOpening);
+
             PrimaryItem GarageToolBox = new PrimaryItem("Tool Box", Garage.Name);
             PrimaryItem GarageShoeRack = new PrimaryItem("Shoe Rack", Garage.Name);
             List<PrimaryItem> itemsInGarage = new List<PrimaryItem> { GarageHusbandCar, GarageWifeCar, GarageCatCage, GarageCatFoodSack, GarageToolBox, GarageShoeRack };
@@ -168,6 +183,7 @@ namespace Project_OOP_2._0
         {
             intro.playScene(this);
             scene1.playScene(this);
+            scene3.playScene(this);
         }
     }
 }

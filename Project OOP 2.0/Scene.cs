@@ -457,4 +457,269 @@ namespace Project_OOP_2._0
         }
 
     }
-} 
+
+    internal class Scene3 : Scene
+    {
+        //Constructor
+        public Scene3(string givenName)
+        {
+            Name = givenName;
+        }
+
+        public override bool validateAction(SecondaryItem item, ActionType action)
+        {
+            // 1. Check for the SUCCESS (Claw + Sack Opening)
+            if (item.Name == "Sack Opening" && action == ActionType.Claw)
+            {
+                return true; // This will trigger the animation in playScene
+            }
+
+            // 2. Handle the "Wrong" items using their SECONDARY names
+            if (item.Name == "Tires")
+            {
+                Console.WriteLine("\nThe tires are too tough for my claws. I need something breakable.");
+            }
+            else if (item.Name == "Cage Door")
+            {
+                Console.WriteLine("\nI'm not locking myself in there!");
+            }
+            else if (item.Name == "Smelly Shoes")
+            {
+                Console.WriteLine("\n*Sniff sniff*... smelly shoes... but not a big enough mess to cancel a date.");
+            }
+            else if (item.Name == "Sack Opening" && action != ActionType.Claw)
+            {
+                Console.WriteLine($"\nSimply {action}-ing the bag won't work. You need to use your claws (Option 4)!");
+            }
+            else
+            {
+                Console.WriteLine($"\nInteracting with {item.Name} won't help. Keep searching the Garage!");
+            }
+
+            return false;
+        }
+
+        public override void exploreHouse(GameEngine engine)
+        {
+            // RESET the result at the start of every turn so previous 
+            // actions don't interfere with the current choice.
+            ValidateActionResult = false;
+
+            Console.WriteLine($"\n[Current Location: {engine.mainCharacterCat.currentLocation?.Name ?? "Not set"}]");
+            Console.WriteLine();
+            Console.Write("Press 'M' to display the house map, 'E' to identify available primary(main) items in the current location, and 'C' to go to another location: ");
+
+            try
+            {
+                char input = char.ToUpper(Console.ReadKey().KeyChar);
+                Console.WriteLine();
+
+                if (input == 'M')
+                {
+                    Console.WriteLine("===========================================================================");
+                    Console.WriteLine("\nHOUSE MAP:");
+                    engine.house.displayMap();
+                    Console.WriteLine("===========================================================================");
+                    Console.WriteLine("\n");
+                }
+                else if (input == 'C')
+                {
+                    Console.WriteLine("\n");
+                    Console.WriteLine($"[Current Location: {engine.mainCharacterCat.currentLocation.Name}]\n");
+                    Console.WriteLine($"Available locations (rooms/space) in the house:\n");
+                    for (int i = 0; i < engine.HouseSpaceList.Count; i++)
+                    {
+                        Console.WriteLine($"{i + 1}. {engine.HouseSpaceList[i].Name}");
+                    }
+                    Console.WriteLine();
+                    Console.Write("Select room/space number to go to: ");
+
+                    if (int.TryParse(Console.ReadLine(), out int roomChoice) && roomChoice >= 1 && roomChoice <= engine.HouseSpaceList.Count)
+                    {
+                        HouseSpace selectedRoom = engine.HouseSpaceList[roomChoice - 1];
+                        goTo(selectedRoom);
+                        engine.mainCharacterCat.currentLocation = selectedRoom;
+                    }
+                    else
+                    {
+                        Console.WriteLine("Invalid room selection.");
+                    }
+                }
+                else if (input == 'E')
+                {
+                    var currentRoom = engine.mainCharacterCat.currentLocation;
+                    if (currentRoom == null || currentRoom.itemsAvailable.Count == 0)
+                    {
+                        Console.WriteLine("There is nothing to explore here.");
+                        return;
+                    }
+
+                    Console.WriteLine($"\n");
+                    Console.WriteLine($"Available items/furnitures in {currentRoom.Name}:\n");
+                    displayItemsAvailable(currentRoom);
+                    Console.Write("Select item number to inspect: ");
+
+                    if (int.TryParse(Console.ReadLine(), out int pItemChoice) && pItemChoice >= 1 && pItemChoice <= currentRoom.itemsAvailable.Count)
+                    {
+                        var selectedPrimary = currentRoom.itemsAvailable[pItemChoice - 1] as PrimaryItem;
+
+                        // IMPORTANT FIX: Check if selectedPrimary is null after casting
+                        if (selectedPrimary == null)
+                        {
+                            Console.WriteLine("This item cannot be inspected.");
+                            return;
+                        }
+
+                        delayedText($"Selected Item: {selectedPrimary.Name} ", 30, resetColorField, resetColorField);
+                        delayedText($"Going to {selectedPrimary.Name} .....", 50, resetColorField, resetColorField);
+
+                        // This check is now safe because you added secondary items in GameEngine
+                        if (selectedPrimary.AvailableSecondaryItem.Count == 0)
+                        {
+                            Console.WriteLine("Nothing to do here. (No usable items on/approximate to this item)");
+                            return;
+                        }
+
+                        Console.WriteLine($"\nItems found on/at {selectedPrimary.Name}:\n");
+                        for (int i = 0; i < selectedPrimary.AvailableSecondaryItem.Count; i++)
+                        {
+                            Console.WriteLine($"{i + 1}. {selectedPrimary.AvailableSecondaryItem[i].Name}");
+                        }
+                        Console.Write("Select item to interact with: ");
+
+                        if (int.TryParse(Console.ReadLine(), out int sItemChoice) && sItemChoice >= 1 && sItemChoice <= selectedPrimary.AvailableSecondaryItem.Count)
+                        {
+                            var selectedSecondary = selectedPrimary.AvailableSecondaryItem[sItemChoice - 1];
+                            delayedText($"Selected Item: {selectedSecondary.Name} ", 30, resetColorField, resetColorField);
+
+                            Console.WriteLine($"\nWhat do you want to do with {selectedSecondary.Name}?\n");
+                            var actions = Enum.GetValues(typeof(ActionType)).Cast<ActionType>().ToList();
+
+                            for (int i = 0; i < actions.Count; i++)
+                            {
+                                Console.WriteLine($"{i + 1}. {actions[i]}");
+                            }
+                            Console.Write("Select action number: ");
+
+                            if (int.TryParse(Console.ReadLine(), out int actionChoice) && actionChoice >= 1 && actionChoice <= actions.Count)
+                            {
+                                ActionType selectedAction = actions[actionChoice - 1];
+
+                                // This calls the validateAction you wrote at the top of Scene3
+                                ValidateActionResult = validateAction(selectedSecondary, selectedAction);
+
+                                if (ValidateActionResult == false)
+                                {
+                                    // If validateAction returned false, it means it wasn't the "winning" action
+                                    // (But your funny messages inside validateAction will still have printed!)
+                                    Console.WriteLine("\n[Action completed, but the mission continues...]");
+                                }
+                            }
+                            else
+                            {
+                                Console.WriteLine("Invalid action selection.");
+                            }
+                        }
+                        else
+                        {
+                            Console.WriteLine("Invalid secondary item selection.");
+                        }
+                    }
+                    else
+                    {
+                        Console.WriteLine("Invalid item selection.");
+                    }
+                }
+                else
+                {
+                    // Using a simple message instead of throwing an Exception to prevent the game from crashing
+                    Console.WriteLine("Invalid input! Please press M, E, or C.");
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error: {ex.Message}. Please try again");
+            }
+        }
+
+        public override void playScene(GameEngine engine)
+        {
+            string Tangerine = "\x1b[38;2;255;153;51m";
+            string reset = "\x1b[0m";
+            string header = @"
+             =======================================================
+                          SCENE 3: THE KIBBLE CHAOS
+             =======================================================
+            ";
+            delayedText(header, 10, Tangerine, reset);
+
+            delayedText($"{engine.mainCharacterCat.Name} said to himself, \"Oh, that wasn't enough. I need to do something else to cancel this meeting...\"", 50, reset, reset);
+            delayedText($"{engine.mainCharacterCat.Name} roamed the house looking for another distraction.", 50, reset, reset);
+            delayedText($"MISSION: Find the new sack of food in the Garage and create a distraction!", 50, Tangerine, reset);
+
+            bool scene3Completed = false;
+
+            while (!scene3Completed)
+            {
+                // 1. This runs the menu. Inside here, ValidateActionResult becomes TRUE 
+                // only if user picks "Sack Opening" and "Claw".
+                exploreHouse(engine);
+
+                // 2. CHECK SUCCESS: We look for the location and the result from validateAction
+                if (engine.mainCharacterCat.currentLocation.Name == "Garage" && ValidateActionResult == true)
+                {
+                    // We move the mission logic here so it triggers immediately
+                    delayedText($"\nIn the garage, {engine.mainCharacterCat.Name} saw the brand new 5kg sack of cat food.", 50, reset, reset);
+                    delayedText("An idea struck him.", 50, Tangerine, reset);
+
+                    // TRIGGER THE ANIMATION
+                    TearBagAnimation(Tangerine, reset);
+
+                    delayedText($"{engine.mainCharacterCat.Name} clawed at the sack aggressively until it tore open!", 50, reset, reset);
+                    delayedText($"He then scattered the kibble all over the garage floor, creating a massive mess to delay the date.", 50, reset, reset);
+
+                    delayedText("\nMISSION ACCOMPLISHED: The garage is now a kibble minefield.", 60, Tangerine, reset);
+
+                    scene3Completed = true; // This ends the loop
+                }
+            }
+        }
+
+        // Animation method
+        private void TearBagAnimation(string color, string reset)
+        {
+            string frame1 = @"
+                |-------|
+                | KIBBLE|
+                |  5KG  |
+                |       |
+                |_______|";
+
+            string frame2 = @"
+                |--- ---|
+                | KI /LE|
+                |  5/ G |
+                |  /    |
+                |_/_____|";
+
+            string frame3 = @"
+                |--   --|
+                | K / \E|
+                |  /   \|
+                | / . . \
+                |/ . . . \";
+
+            string[] frames = { frame1, frame2, frame3 };
+
+            Console.Clear();
+            foreach (string frame in frames)
+            {
+                Console.SetCursorPosition(0, 5); // to keep the bag in the same place
+                Console.WriteLine(color + frame + reset);
+                Thread.Sleep(400);
+            }
+            Console.WriteLine("\n *ZRUPPPP* \n");
+            Thread.Sleep(500);
+        }
+    }
+}
