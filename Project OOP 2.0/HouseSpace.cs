@@ -8,16 +8,30 @@ namespace Project_OOP_2._0
 {
     internal class HouseSpace
     {
-        public string Name { get; set; }
-        public List<PrimaryItem> itemsAvailable = new List<PrimaryItem>();
+        //OOP Concept applied: ENCAPSULATION (private fields, and public properties)
 
-        //constructor
-        public HouseSpace(string givenName)
+        // 1. Private Fields
+        private string name;
+        private List<PrimaryItem> itemsAvailable;
+
+        // 2. Public Properties
+        public string Name
         {
-            Name = givenName;
+            get { return name; }
+            set { name = value; }
         }
 
-        //Methods
-        
+        public List<PrimaryItem> ItemsAvailable //OOP Concept applied: COLLECTIONS (List of PrimaryItem)
+        {
+            get { return itemsAvailable; }
+            set { itemsAvailable = value; }
+        }
+
+        // 3. Constructor
+        public HouseSpace(string givenName)
+        {
+            this.Name = givenName;
+            this.ItemsAvailable = new List<PrimaryItem>();
+        }
     }
 }

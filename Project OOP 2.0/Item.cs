@@ -6,13 +6,27 @@ using System.Threading.Tasks;
 
 namespace Project_OOP_2._0
 {
-    internal abstract class Item
+    internal abstract class Item //OOP Concept applied: ABSTRACTION (Item is an abstract class that cannot be instantiated directly)
     {
-        //Properties
-        public string Name { get; set; }
-        public string HouseSpaceLocation { get; set; }
+        //OOP Concept applied: ENCAPSULATION (private fields, and public properties)
+        // 1. Private Fields
+        private string name;
+        private string houseSpaceLocation;
 
-        //Constructor
+        // 2. Public Properties 
+        public string Name
+        {
+            get { return name; }
+            set { name = value; }
+        }
+
+        public string HouseSpaceLocation
+        {
+            get { return houseSpaceLocation; }
+            set { houseSpaceLocation = value; }
+        }
+
+        // 3. Constructor
         public Item(string givenName, string givenHouseSpaceLocation)
         {
             Name = givenName;
@@ -20,25 +34,29 @@ namespace Project_OOP_2._0
         }
     }
 
-    internal class PrimaryItem : Item
+    internal class PrimaryItem : Item //OOP Concept applied: INHERITANCE (PrimaryItem is a subclass of Item)
     {
-        //Properties
-        public List<SecondaryItem> AvailableSecondaryItem { get; set; }
-        //Constructor
+        //OOP Concept applied: Encapsulation (private fields, and public properties)
+        // Private Field
+        private List<SecondaryItem> availableSecondaryItem; //OOP Concept applied: COLLECTIONS (List of SecondaryItem)
+
+        // Public Property
+        public List<SecondaryItem> AvailableSecondaryItem
+        {
+            get { return availableSecondaryItem; }
+            set { availableSecondaryItem = value; }
+        }
+
         public PrimaryItem(string givenName, string givenHouseSpaceLocation) : base(givenName, givenHouseSpaceLocation)
         {
-            // Kena initialize list ni bila Item baru dicipta
-            AvailableSecondaryItem = new List<SecondaryItem>();
+            this.AvailableSecondaryItem = new List<SecondaryItem>();
         }
     }
 
-    internal class SecondaryItem : Item
+    internal class SecondaryItem : Item //OOP Concept applied: INHERITANCE (SecondaryItem is a subclass of Item)
     {
-        //Constructor
         public SecondaryItem(string givenName, string givenHouseSpaceLocation) : base(givenName, givenHouseSpaceLocation)
         {
         }
-
-
     }
 }

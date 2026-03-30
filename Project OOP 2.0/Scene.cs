@@ -10,25 +10,43 @@ using static Project_OOP_2._0.Cat;
 
 namespace Project_OOP_2._0
 {
-    internal abstract class Scene
+    internal abstract class Scene //OOP Concept applied: ABSTRACTION (Scene is an abstract class that defines common properties and methods for different scenes in the game, but cannot be instantiated on its own)
     {
-        //Properties
-        public string Name { get; set; }
-        public string resetColorField = "\x1b[0m"; //ASNI code
-        public bool ValidateActionResult { get; set; } //This property is used to store the result of the action that the player has taken, whether it is valid or not. This will be used in the PlayerMovementLoop() method to determine whether the player can move to the next scene or not.
-        //Methods
+        //OOP Concept applied: ENCAPSULATION (private fields, and public properties)
+        // 1. Private Fields
+        private string name;
+        private string resetColorField = "\x1b[0m"; 
+        private string tangerine = "\x1b[38;2;255;153;51m"; 
+        private bool validateActionResult;
+
+        // 2. Public Properties
+        public string Name
+        {
+            get { return name; }
+            set { name = value; }
+        }
+
+        public string ResetColorField
+        {
+            get { return resetColorField; }
+            set { resetColorField = value; }
+        }
+
+        public string Tangerine 
+        {
+            get { return tangerine; }
+        }
+
+        public bool ValidateActionResult
+        {
+            get { return validateActionResult; }
+            set { validateActionResult = value; }
+        }
+
+        // 3. Methods
         public void delayedText(string text, int speed, string textColor, string resetColor)
         {
-            //Since text color is an ANSI escape code, that starts with \x1b, the Console.Write() method will not display the actual string itself, but instead will interpret it as an instruction to change the text color in the console. So, when we call Console.Write(textColor), it will change the color of the text that follows it in the console output to the color specified by the ANSI escape code in textColor.
             Console.Write(textColor);
-
-            // 1. CLEAR BUFFER: Remove every key input 
-            //Console.KeyAvailable Property is used to get a value which shows whether a key press is available in the input stream.
-            //Or in another word , it checks whether there are any key presses that have been made by the user but have not yet been read by the program. If there are key presses available in the input stream, it returns true; otherwise, it returns false.
-            //Input stream is the buffer that holds the key presses until they are read by the program. When a key is pressed, it is stored in the input stream until the program reads it using Console.ReadKey() or similar methods. If there are any key presses in the input stream, Console.KeyAvailable will return true, indicating that there is a key press available to be read. If there are no key presses in the input stream, it will return false.
-            //Console.ReadKey(true) method is used to READ A KEY PRESS IN THE INPUT STREAM. The true parameter indicates that the key press should not be displayed in the console. When this method is called, it will read the next key press from the input stream and return it as a ConsoleKeyInfo object. If there are no key presses available in the input stream, it will block until a key press is available.
-            //This block of code is like this "read and discard the key input in the Input Stream while there is a key input in the InputStram"
-            //This effectively clears the input buffer of any key presses that may have been made by the user before calling this method, ensuring that any subsequent key presses will be processed correctly without interference from previous inputs.
             while (Console.KeyAvailable)
             {
                 Console.ReadKey(true);
@@ -40,13 +58,12 @@ namespace Project_OOP_2._0
             {
                 Console.Write(c);
 
-                if (!skipDelay) //if skipDelay is false
+                if (!skipDelay)
                 {
-                    // 2. RADAR: If player press any key
                     if (Console.KeyAvailable)
                     {
-                        skipDelay = true; // Cut the delay!
-                        Console.ReadKey(true); // Discard the key press that was made by the user in ordere to skip the delay, so that it won't interfere with any subsequent key presses.
+                        skipDelay = true;
+                        Console.ReadKey(true);
                     }
                     else
                     {
@@ -54,12 +71,10 @@ namespace Project_OOP_2._0
                     }
                 }
             }
-            // Reset the console text color to default 
             Console.Write(resetColor);
             Console.WriteLine();
         }
-
-        //POLYMORPHISM: Method Overloading
+        //OOP Concept applied: POLYMORPHISM (Method Overloading - two methods with the same name but different parameters)
         public void delayedText(string text, int speed, string textColor, string resetColor, bool newLine)
         {
             Console.Write(textColor);
@@ -74,13 +89,12 @@ namespace Project_OOP_2._0
             {
                 Console.Write(c);
 
-                if (!skipDelay) //if skipDelay is false
+                if (!skipDelay)
                 {
-                    // 2. RADAR: If player press any key
                     if (Console.KeyAvailable)
                     {
-                        skipDelay = true; // Cut the delay!
-                        Console.ReadKey(true); // Discard the key press that was made by the user in ordere to skip the delay, so that it won't interfere with any subsequent key presses.
+                        skipDelay = true;
+                        Console.ReadKey(true);
                     }
                     else
                     {
@@ -88,7 +102,6 @@ namespace Project_OOP_2._0
                     }
                 }
             }
-            // Reset the console text color to default 
             Console.Write(resetColor);
             if (newLine)
             {
@@ -101,7 +114,7 @@ namespace Project_OOP_2._0
             bool isNameValid = false;
             do
             {
-                delayedText($"Enter the {objectName}'s name: ", 50, resetColorField, resetColorField, false);
+                delayedText($"Enter the {objectName}'s name: ", 50, ResetColorField, ResetColorField, false);
                 string input = Console.ReadLine();
                 if (!string.IsNullOrWhiteSpace(input))
                 {
@@ -115,27 +128,25 @@ namespace Project_OOP_2._0
             } while (isNameValid == false);
         }
 
-
         public void displayItemsAvailable(HouseSpace givenHouseSpace)
         {
-            for (int i = 0; i < givenHouseSpace.itemsAvailable.Count; i++)
+            for (int i = 0; i < givenHouseSpace.ItemsAvailable.Count; i++)
             {
-                Console.WriteLine($"{i + 1}. {givenHouseSpace.itemsAvailable[i].Name}");
+                Console.WriteLine($"{i + 1}. {givenHouseSpace.ItemsAvailable[i].Name}");
             }
         }
 
-
         public void goTo(HouseSpace houseSpace)
         {
-            delayedText($"Going to {houseSpace.Name} .....", 50, resetColorField, resetColorField);
+            delayedText($"Going to {houseSpace.Name} .....", 50, ResetColorField, ResetColorField);
         }
 
         public virtual void exploreHouse(GameEngine engine)
         {
-            Console.WriteLine($"\n[Current Location: {engine.mainCharacterCat.currentLocation?.Name ?? "Not set"}]");
+            Console.WriteLine($"\n[Current Location: {engine.MainCharacterCat.CurrentLocation?.Name ?? "Not set"}]");
             Console.WriteLine();
             Console.Write("Press 'M' to display the house map, 'E' to identify available primary(main) items in the current location, and 'C' to go to another location: ");
-            try //if the user input is not M, E, or C, throw an exception and catch it in the catch block, then prompt the user to try again
+            try
             {
                 char input = char.ToUpper(Console.ReadKey().KeyChar);
                 Console.WriteLine();
@@ -144,14 +155,14 @@ namespace Project_OOP_2._0
                 {
                     Console.WriteLine("===========================================================================");
                     Console.WriteLine("\nHOUSE MAP:");
-                    engine.house.displayMap();
+                    engine.House.displayMap();
                     Console.WriteLine("===========================================================================");
                     Console.WriteLine("\n");
                 }
                 else if (input == 'C')
                 {
                     Console.WriteLine("\n");
-                    Console.WriteLine($"[Current Location: {engine.mainCharacterCat.currentLocation.Name}]\n");
+                    Console.WriteLine($"[Current Location: {engine.MainCharacterCat.CurrentLocation.Name}]\n");
                     Console.WriteLine($"Available locations (rooms/space) in the house:\n");
                     for (int i = 0; i < engine.HouseSpaceList.Count; i++)
                     {
@@ -164,7 +175,7 @@ namespace Project_OOP_2._0
                     {
                         HouseSpace selectedRoom = engine.HouseSpaceList[roomChoice - 1];
                         goTo(selectedRoom);
-                        engine.mainCharacterCat.currentLocation = selectedRoom; // Update current location after moving
+                        engine.MainCharacterCat.CurrentLocation = selectedRoom;
                     }
                     else
                     {
@@ -173,35 +184,28 @@ namespace Project_OOP_2._0
                 }
                 else if (input == 'E')
                 {
-                    // Logic senaraikan PrimaryItem -> Pilih Secondary Item -> Pilih Action
-                    // Jika user pilih SecondaryItem, panggil method interface tu:
-                    //selectedSecondaryItem.Interact(selectedAction, this);
-
-                    // === LOGIK EXPLORE BILIK (CARI BARANG & BUAT ACTION) ===
-                    var currentRoom = engine.mainCharacterCat.currentLocation;
-                    if (currentRoom == null || currentRoom.itemsAvailable.Count == 0)
+                    var currentRoom = engine.MainCharacterCat.CurrentLocation;
+                    if (currentRoom == null || currentRoom.ItemsAvailable.Count == 0)
                     {
                         Console.WriteLine("There is nothing to explore here.");
                         return;
                     }
 
-                    // 1. Listing down all primary items in the current location
                     Console.WriteLine($"\n");
                     Console.WriteLine($"Available items/furnitures in {currentRoom.Name}:\n");
                     displayItemsAvailable(currentRoom);
                     Console.Write("Select item number to inspect: ");
 
-                    if (int.TryParse(Console.ReadLine(), out int pItemChoice) && pItemChoice >= 1 && pItemChoice <= currentRoom.itemsAvailable.Count)
+                    if (int.TryParse(Console.ReadLine(), out int pItemChoice) && pItemChoice >= 1 && pItemChoice <= currentRoom.ItemsAvailable.Count)
                     //int.TryParse(string input, out int result)
                     //This method tries to convert the string input (first parameter) into an integer.
                     //If it succeeds, it returns true and assigns the converted integer to the second parameter. 
                     //out int pItemChoice : Create an int variable named pItemChoice, and
                     //assign the value that has been parsed from the user input.
                     {
-                        // Kita kena cast sebagai PrimaryItem untuk akses list SecondaryItem di dalamnya
-                        var selectedPrimary = currentRoom.itemsAvailable[pItemChoice - 1] as PrimaryItem;
-                        delayedText($"Selected Item: {selectedPrimary.Name} ", 30, resetColorField, resetColorField);
-                        delayedText($"Going to {selectedPrimary.Name} .....", 50, resetColorField, resetColorField);
+                        var selectedPrimary = currentRoom.ItemsAvailable[pItemChoice - 1] as PrimaryItem;
+                        delayedText($"Selected Item: {selectedPrimary.Name} ", 30, ResetColorField, ResetColorField);
+                        delayedText($"Going to {selectedPrimary.Name} .....", 50, ResetColorField, ResetColorField);
 
                         if (selectedPrimary == null || selectedPrimary.AvailableSecondaryItem.Count == 0)
                         {
@@ -209,7 +213,6 @@ namespace Project_OOP_2._0
                             return;
                         }
 
-                        // 2. Senaraikan Secondary Item
                         Console.WriteLine($"\nItems found on/at {selectedPrimary.Name}:\n");
                         for (int i = 0; i < selectedPrimary.AvailableSecondaryItem.Count; i++)
                         {
@@ -220,15 +223,11 @@ namespace Project_OOP_2._0
                         if (int.TryParse(Console.ReadLine(), out int sItemChoice) && sItemChoice >= 1 && sItemChoice <= selectedPrimary.AvailableSecondaryItem.Count)
                         {
                             var selectedSecondary = selectedPrimary.AvailableSecondaryItem[sItemChoice - 1];
-                            delayedText($"Selected Item: {selectedSecondary.Name} ", 30, resetColorField, resetColorField);
+                            delayedText($"Selected Item: {selectedSecondary.Name} ", 30, ResetColorField, ResetColorField);
 
-                            // 3. Senaraikan Action yang wujud dalam Enum ActionType
                             Console.WriteLine($"\nWhat do you want to do with {selectedSecondary.Name}?\n");
                             var actions = Enum.GetValues(typeof(ActionType)).Cast<ActionType>().ToList();
-                            //Enum.GetValues(typeof(ActionType)) : This method retrieves an array of the values of the constants in the specified enumeration (ActionType).
-                            //Cast<ActionType>() : After getting the values in the array, that are casted to ActionType
-                            //ToList() : The casted values are then converted into a List<ActionType> for easier manipulation.
-                            //
+
                             for (int i = 0; i < actions.Count; i++)
                             {
                                 Console.WriteLine($"{i + 1}. {actions[i]}");
@@ -246,7 +245,7 @@ namespace Project_OOP_2._0
                             }
                             else
                             {
-                                Console.WriteLine("Invalid action selection.");
+                                Console.WriteLine("Invalid action selection."); //OOP Concept applied: Exeption Handling
                             }
                         }
                         else
@@ -264,38 +263,35 @@ namespace Project_OOP_2._0
                     throw new InvalidOperationException("Invalid input!!!");
                 }
             }
-            catch (Exception ex) //Exception Handling
+            catch (Exception ex)
             {
                 Console.WriteLine($"Error: {ex.Message}. Please try again");
             }
         }
 
+        //OOP Concept applied: POLYMORPHISM (Method Overriding - child classes can provide specific implementation of this method based on the scene's requirement)
         public virtual void playScene(GameEngine engine)
         {
-            // This method will be overridden by the child class to play the scene
         }
 
+        //OOP Concept applied: POLYMORPHISM (Method Overloading)
         public virtual bool validateAction(SecondaryItem item, ActionType action)
         {
-            return false; //Please overrride this
+            return false;
         }
 
         public virtual bool validateAction(PrimaryItem item)
         {
-            return false; // default behavior, override in child classes as needed
+            return false;
         }
-
-        
     }
 
-    internal class IntroScene : Scene
+    internal class IntroScene : Scene //OOP Concept applied: INHERITANCE (IntroScene is a child class that inherits from the abstract class Scene, and provides specific implementation for the playScene method)
     {
-        //Constructor
         public IntroScene(string givenName)
         {
-            Name = givenName;
+            this.Name = givenName;
         }
-
 
         public override void playScene(GameEngine engine)
         {
@@ -319,39 +315,34 @@ namespace Project_OOP_2._0
                    '""'   '""'
              ";
 
-            //---INTRO---
-            //Creating colors
-            string Tangerine = "\x1b[38;2;255;153;51m"; //ASNI
-            string resetColor = "\x1b[0m";
+            
 
-            //Display the tile in ascii art...
-            delayedText(titleArt, 10, Tangerine, resetColor);
-            delayedText(catASCII, 10, Tangerine, resetColor);
+            delayedText(titleArt, 10, Tangerine, ResetColorField);
+            delayedText(catASCII, 10, Tangerine, ResetColorField);
             Console.WriteLine("\n=======================================================");
             Console.WriteLine("                  Press 'ENTER' to start...            ");
             Console.WriteLine("=======================================================\n");
 
             Console.ReadLine();
-            delayedText("Welcome to The Feline Witness :).", 50, resetColor, resetColor);
+            delayedText("Welcome to The Feline Witness :).", 50, ResetColorField, ResetColorField);
             Console.ReadLine();
-            delayedText("This game is about a cat, that witnesses an event that changes it and its owner life, who is a woman, and a wife.", 50, resetColor, resetColor);
+            delayedText("This game is about a cat, that witnesses an event that changes it and its owner life, who is a woman, and a wife.", 50, ResetColorField, ResetColorField);
             Console.ReadLine();
-            delayedText("First, let's give the cat a name.", 50, resetColor, resetColor);
-            //delayedText("Enter the cat's name:", 50, resetColor, resetColor, false);
-            //engine.mainCharacterCat.Name = Console.ReadLine();
-            getName(engine.mainCharacterCat, "cat");
-            delayedText("Perfect...", 50, resetColor, resetColor);
+            delayedText("First, let's give the cat a name.", 50, ResetColorField, ResetColorField);
+            getName(engine.MainCharacterCat, "cat");
+            delayedText("Perfect...", 50, ResetColorField, ResetColorField);
             Console.Clear();
         }
     }
 
     internal class Scene1 : Scene
     {
-        //Constructor
         public Scene1(string givenName)
         {
-            Name = givenName;
+            this.Name = givenName;
         }
+
+        //OOP Concept applied: POLYMORPHISM (Method Overriding - specific implementation for this scene, different from other scenes)
         public override bool validateAction(SecondaryItem item, ActionType action)
         {
             bool isValid = false;
@@ -359,63 +350,55 @@ namespace Project_OOP_2._0
             {
                 isValid = true;
             }
-
             return isValid;
         }
-
-        
-
+        //OOP Concept applied: POLYMORPHISM (Method Overriding - specific implementation for this scene, different from other scenes)
         public override void playScene(GameEngine engine)
         {
-
             string scene1 = @"
              =======================================================
                             SCENE 1: SUSPICIOUS
              =======================================================
             ";
 
-            engine.mainCharacterCat.currentLocation = engine.HouseSpaceList[5]; //Set the current location of the cat to the first room in the house, which is the living room
+            engine.MainCharacterCat.CurrentLocation = engine.HouseSpaceList[5];
 
-            delayedText(scene1, 10, resetColorField, resetColorField);
-            delayedText($"Meet {engine.mainCharacterCat.Name}. {engine.mainCharacterCat.Name} was a cat owned by a husband and wife who lived happily in a nice house", 50, resetColorField, resetColorField);
+            delayedText(scene1, 10, Tangerine, ResetColorField);
+            delayedText($"Meet {engine.MainCharacterCat.Name}. {engine.MainCharacterCat.Name} was a cat owned by a husband and wife who lived happily in a nice house.", 50, ResetColorField, ResetColorField);
             Console.ReadLine();
-            delayedText("Let's give the husband a name.", 50, resetColorField, resetColorField);
-            //delayedText("Enter the husband's name: ", 50, resetColorField, resetColorField, false);
-            //engine.husband.Name = Console.ReadLine();
-            getName(engine.husband, "husband");
-            delayedText($"Perfect..., the husband's name now is {engine.husband.Name}. Now let's give the wife a name.", 50, resetColorField, resetColorField);
-            //delayedText("Enter the wife's name: ", 50, resetColorField, resetColorField, false);
-            //engine.wife.Name = Console.ReadLine();
-            getName(engine.wife, "wife");
-            delayedText($"Great..., the wife's name now is {engine.wife.Name}.", 50, resetColorField, resetColorField);
+            delayedText("Let's give the husband a name.", 50, ResetColorField, ResetColorField);
+            getName(engine.Husband, "husband");
+            delayedText($"Perfect..., the husband's name now is {engine.Husband.Name}. Now let's give the wife a name.", 50, ResetColorField, ResetColorField);
+            getName(engine.Wife, "wife");
+            delayedText($"Great..., the wife's name now is {engine.Wife.Name}.", 50, ResetColorField, ResetColorField);
             Console.ReadLine();
             Console.Clear();
 
-            delayedText($"One day, {engine.wife.Name} had to go out of town for work (outstation). " +
-                $"According to {engine.husband.Name}, he also had an outstation trip and had to leave the house that day as well. " +
-                $"However, {engine.wife.Name} had to leave first", 50, resetColorField, resetColorField);
+            delayedText($"One day, {engine.Wife.Name} had to go out of town for work (outstation). " +
+                $"According to {engine.Husband.Name}, he also had an outstation trip and had to leave the house that day as well. " +
+                $"However, {engine.Wife.Name} had to leave first", 50, ResetColorField, ResetColorField);
 
-            engine.wife.displayDialogue($"\"Bye bye darling. Love you.\"", 50, resetColorField, resetColorField);
-            engine.husband.displayDialogue($"\"Bye honey. Love you too.\"", 50, resetColorField, resetColorField);
+            engine.Wife.displayDialogue($"\"Bye bye darling. Love you.\"", 50, ResetColorField, ResetColorField);
+            engine.Husband.displayDialogue($"\"Bye honey. Love you too.\"", 50, ResetColorField, ResetColorField);
             Console.ReadLine();
-            delayedText($"{engine.wife.Name} then left the house...", 50, resetColorField, resetColorField);
+            delayedText($"{engine.Wife.Name} then left the house...", 50, ResetColorField, ResetColorField);
             Console.Clear();
-            delayedText($"However, upon closer observation... even though {engine.husband.Name} claimed he had work to do out of town, he showed no signs of leaving. ", 50, resetColorField, resetColorField);
-            delayedText("Instead, he was quite relaxed that day, constantly using his smartphone, texting someone.", 50, resetColorField, resetColorField);
+            delayedText($"However, upon closer observation... even though {engine.Husband.Name} claimed he had work to do out of town, he showed no signs of leaving. ", 50, ResetColorField, ResetColorField);
+            delayedText("Instead, he was quite relaxed that day, constantly using his smartphone, texting someone.", 50, ResetColorField, ResetColorField);
             Console.ReadLine();
             delayedText($"Occasionally, he would chuckle while typing. " +
-                $"The clock struck 9:00 AM, but there were no signs that the husband was going anywhere.", 50, resetColorField, resetColorField);
+                $"The clock struck 9:00 AM, but there were no signs that the husband was going anywhere.", 50, ResetColorField, ResetColorField);
             Console.ReadLine();
-            delayedText($"He was still texting to someone on a sofa in the living room, while {engine.mainCharacterCat.Name} was observing him from its position. ", 50, resetColorField, resetColorField);
-            delayedText($"{engine.mainCharacterCat.Name} started to feel curious. What was {engine.husband.Name} actually doing?", 50, resetColorField, resetColorField);
+            delayedText($"He was still texting to someone on a sofa in the living room, while {engine.MainCharacterCat.Name} was observing him from its position. ", 50, ResetColorField, ResetColorField);
+            delayedText($"{engine.MainCharacterCat.Name} started to feel curious. What was {engine.Husband.Name} actually doing?", 50, ResetColorField, ResetColorField);
             Console.ReadLine();
             Console.Clear();
 
-            delayedText($"{engine.mainCharacterCat.Name} decided to observe {engine.husband.Name}'s phone. It wanted to do this by approaching him on a sofa and then sitting on his lap.", 50, resetColorField, resetColorField);
+            delayedText($"{engine.MainCharacterCat.Name} decided to observe {engine.Husband.Name}'s phone. It wanted to do this by approaching him on a sofa and then sitting on his lap.", 50, ResetColorField, ResetColorField);
             Console.ReadLine();
             Console.WriteLine("\n===========================================================================");
-            Console.WriteLine($"MISSION: {engine.mainCharacterCat.Name} wanted to investigate the husband.");
-            Console.WriteLine($"Find where {engine.husband.Name} sat, and observe his phone");
+            Console.WriteLine($"MISSION: {engine.MainCharacterCat.Name} wanted to investigate the husband.");
+            Console.WriteLine($"Find where {engine.Husband.Name} sat, and observe his phone");
             Console.WriteLine("===========================================================================\n");
 
             do
@@ -423,58 +406,59 @@ namespace Project_OOP_2._0
                 exploreHouse(engine);
             } while (ValidateActionResult == false);
 
-            ValidateActionResult = false; //reset the ValidateActionResult for the next use in this scene
+            ValidateActionResult = false;
             Console.Clear();
-            delayedText($"There was a woman's name displayed on the husband's phone screen, and {engine.husband.Name} was texting to that person. ", 50, resetColorField, resetColorField);
-            delayedText($"Give this woman's name a name.", 50, resetColorField, resetColorField);
-            //Console.Write("Enter the name: ");
-            //engine.mistress.Name = Console.ReadLine();
-            getName(engine.mistress, "mistress");
+            delayedText($"There was a woman's name displayed on the husband's phone screen, and {engine.Husband.Name} was texting to that person. ", 50, ResetColorField, ResetColorField);
+            delayedText($"Give this woman a name.", 50, ResetColorField, ResetColorField);
+            getName(engine.Mistress, "mistress");
             Console.WriteLine();
             Console.WriteLine("=======================================================");
-            Console.WriteLine($"ONLINE CHAT, (By {engine.mainCharacterCat.Name}'s perspective)");
+            Console.WriteLine($"ONLINE CHAT, (By {engine.MainCharacterCat.Name}'s perspective)");
             Console.WriteLine("=======================================================\n");
-            engine.husband.displayDialogue($"\"Babe, my wife isn't home this time, outstation. Want to meet up?\"", 50, resetColorField, resetColorField);
+            engine.Husband.displayDialogue($"\"Babe, my wife isn't home this time, outstation. Want to meet up?\"", 50, ResetColorField, ResetColorField);
             Console.ReadLine();
-            engine.mistress.displayDialogue($"\"Oh really? Yayyy! Where do you want to meet? The cafe we always go to?\"", 50, resetColorField, resetColorField);
+            engine.Mistress.displayDialogue($"\"Oh really? Yayyy! Where do you want to meet? The cafe we always go to?\"", 50, ResetColorField, ResetColorField);
             Console.ReadLine();
-            delayedText($"{engine.mainCharacterCat.Name} was puzzled. Who is \"{engine.mistress.Name}\"? And what was {engine.husband.Name} doing?", 50, resetColorField, resetColorField);
+            delayedText($"{engine.MainCharacterCat.Name} was puzzled. Who is \"{engine.Mistress.Name}\"? And what was {engine.Husband.Name} doing?", 50, ResetColorField, ResetColorField);
             Console.ReadLine();
-            engine.husband.displayDialogue($"\"I'm ok with that...\"", 50, resetColorField, resetColorField);
+            engine.Husband.displayDialogue($"\"I'm ok with that...\"", 50, ResetColorField, ResetColorField);
             Console.ReadLine();
-            engine.husband.displayDialogue($"\"Yes, seriously, I can bake. And I have an idea. Instead of us going to the cafe, how about I bake a white chocolate macadamia cake for you, " +
-                $"and you come over to eat at my place? You’ve never been to my house, right?\"", 50, resetColorField, resetColorField);
+            engine.Mistress.displayDialogue($"\"Actually, I’m craving that cafe's white chocolate macadamia cake. You know, the cafe that we frequently go to... That’s my favorite...\"", 50, ResetColorField, ResetColorField);
+            engine.Husband.displayDialogue($"\"Speaking of cake, have you forgotten that I know how to make cakes too? I told you before that I’m good at baking.\"", 50, ResetColorField, ResetColorField);
+            engine.Mistress.displayDialogue($"\"Really babe?\"", 50, ResetColorField, ResetColorField);
+            engine.Husband.displayDialogue($"\"Yes, seriously, I can bake. And I have an idea. Instead of us going to the cafe, how about I bake a white chocolate macadamia cake for you, " +
+                $"and you come over to eat at my place? You’ve never been to my house, right?\"", 50, ResetColorField, ResetColorField);
             Console.ReadLine();
-            engine.mistress.displayDialogue($"\"Wait, are you serious? Inviting me to the house? What if your wife finds out?\"", 50, resetColorField, resetColorField);
-            engine.husband.displayDialogue($"\"Relax babe. Do you want it or not? I honestly want to bake for you... let me bake this morning, you come over in the evening, have some cake, " +
-                $"and then perhaps we can watch Netflix together...\"", 50, resetColorField, resetColorField);
-            engine.husband.displayDialogue($"\"I really wanna see you\"", 50, resetColorField, resetColorField);
+            engine.Mistress.displayDialogue($"\"Wait, are you serious? Inviting me to the house? What if your wife finds out?\"", 50, ResetColorField, ResetColorField);
+            engine.Husband.displayDialogue($"\"Relax babe. Do you want it or not? I honestly want to bake for you... let me bake this morning, you come over in the evening, have some cake, " +
+                $"and then perhaps we can watch Netflix together...\"", 50, ResetColorField, ResetColorField);
+            engine.Husband.displayDialogue($"\"I really wanna see you\"", 50, ResetColorField, ResetColorField);
             Console.ReadLine();
-            engine.mistress.displayDialogue($"\"Umm, yeah, sounds interesting. Is it the same location you shared before? What time can I come?\"", 50, resetColorField, resetColorField);
-            engine.husband.displayDialogue($"\"Yes same location. Is 3 PM okay?\"", 50, resetColorField, resetColorField);
+            engine.Mistress.displayDialogue($"\"Umm, yeah, sounds interesting. Is it the same location you shared before? What time can I come?\"", 50, ResetColorField, ResetColorField);
+            engine.Husband.displayDialogue($"\"Yes same location. Is 3 PM okay?\"", 50, ResetColorField, ResetColorField);
             Console.ReadLine();
-            engine.mistress.displayDialogue($"\"3 PM is perfect. See you there.. ;)\"", 50, resetColorField, resetColorField);
+            engine.Mistress.displayDialogue($"\"3 PM is perfect. See you there.. ;)\"", 50, ResetColorField, ResetColorField);
             Console.ReadLine();
             Console.Clear();
-            delayedText($".....", 70, resetColorField, resetColorField);
-            delayedText($"{engine.mainCharacterCat.Name} was stunned. It had to process several shocking facts:", 50, resetColorField, resetColorField);
-            delayedText($"1. {engine.husband.Name} was cheating; he has another woman named \"{engine.mistress.Name}\".", 50, resetColorField, resetColorField);
-            delayedText($"2. {engine.husband.Name} seems to have had a secret relationship with {engine.mistress.Name} for a while (based on the phrase \"the cafe we always go to\").", 50, resetColorField, resetColorField);
-            delayedText($"3. {engine.wife.Name} ({engine.husband.Name}'s wife), knew nothing about this.", 50, resetColorField, resetColorField);
-            delayedText($"4. {engine.husband.Name} was planning to meet up with {engine.mistress.Name} IN THIS HOUSE", 50, resetColorField, resetColorField);
+            delayedText($".....", 70, ResetColorField, ResetColorField);
+            delayedText($"{engine.MainCharacterCat.Name} was stunned. It had to process several shocking facts:", 50, ResetColorField, ResetColorField);
+            delayedText($"1. {engine.Husband.Name} was cheating; he has another woman named \"{engine.Mistress.Name}\".", 50, ResetColorField, ResetColorField);
+            delayedText($"2. {engine.Husband.Name} seems to have had a secret relationship with {engine.Mistress.Name} for a while (based on the phrase \"the cafe we always go to\").", 50, ResetColorField, ResetColorField);
+            delayedText($"3. {engine.Wife.Name} ({engine.Husband.Name}'s wife), knew nothing about this.", 50, ResetColorField, ResetColorField);
+            delayedText($"4. {engine.Husband.Name} was planning to meet up with {engine.Mistress.Name} IN THIS HOUSE", 50, ResetColorField, ResetColorField);
             Console.ReadLine();
-            delayedText($"End of Scene 1...", 50, resetColorField, resetColorField);
+            delayedText($"End of Scene 1...", 50, ResetColorField, ResetColorField);
         }
     }
 
-    internal class Scene2 : Scene
+    internal class Scene2 : Scene //OOP Concept applied: INHERITANCE (Scene2 is a child class that inherits from the abstract class Scene, and provides specific implementation for the playScene method and validateAction methods)
     {
-        //Constructor
         public Scene2(string givenName)
         {
-            Name = givenName;
+            this.Name = givenName;
         }
 
+        //OOP Concept applied: POLYMORPHISM (Method Overriding - specific implementation for this scene, different from other scenes)
         public override bool validateAction(SecondaryItem item, ActionType action)
         {
             bool isValid = false;
@@ -485,6 +469,7 @@ namespace Project_OOP_2._0
             return isValid;
         }
 
+        //OOP Concept applied: POLYMORPHISM (Method Overriding - specific implementation for this scene, different from other scenes)
         public bool validateAction(PrimaryItem item, ActionType action)
         {
             bool isValid = false;
@@ -492,16 +477,15 @@ namespace Project_OOP_2._0
             {
                 isValid = true;
             }
-
             return isValid;
         }
 
         public void exploreHouse(GameEngine engine, string givenMissionName)
         {
-            Console.WriteLine($"\n[Current Location: {engine.mainCharacterCat.currentLocation?.Name ?? "Not set"}]");
+            Console.WriteLine($"\n[Current Location: {engine.MainCharacterCat.CurrentLocation?.Name ?? "Not set"}]");
             Console.WriteLine();
             Console.Write("Press 'M' to display the house map, 'E' to identify available primary(main) items in the current location, and 'C' to go to another location: ");
-            try //if the user input is not M, E, or C, throw an exception and catch it in the catch block, then prompt the user to try again
+            try
             {
                 char input = char.ToUpper(Console.ReadKey().KeyChar);
                 Console.WriteLine();
@@ -510,14 +494,14 @@ namespace Project_OOP_2._0
                 {
                     Console.WriteLine("===========================================================================");
                     Console.WriteLine("\nHOUSE MAP:");
-                    engine.house.displayMap();
+                    engine.House.displayMap();
                     Console.WriteLine("===========================================================================");
                     Console.WriteLine("\n");
                 }
                 else if (input == 'C')
                 {
                     Console.WriteLine("\n");
-                    Console.WriteLine($"[Current Location: {engine.mainCharacterCat.currentLocation.Name}]\n");
+                    Console.WriteLine($"[Current Location: {engine.MainCharacterCat.CurrentLocation.Name}]\n");
                     Console.WriteLine($"Available locations (rooms/space) in the house:\n");
                     for (int i = 0; i < engine.HouseSpaceList.Count; i++)
                     {
@@ -530,7 +514,7 @@ namespace Project_OOP_2._0
                     {
                         HouseSpace selectedRoom = engine.HouseSpaceList[roomChoice - 1];
                         goTo(selectedRoom);
-                        engine.mainCharacterCat.currentLocation = selectedRoom; // Update current location after moving
+                        engine.MainCharacterCat.CurrentLocation = selectedRoom;
                     }
                     else
                     {
@@ -539,28 +523,26 @@ namespace Project_OOP_2._0
                 }
                 else if (input == 'E')
                 {
-                    var currentRoom = engine.mainCharacterCat.currentLocation;
-                    if (currentRoom == null || currentRoom.itemsAvailable.Count == 0)
+                    var currentRoom = engine.MainCharacterCat.CurrentLocation;
+                    if (currentRoom == null || currentRoom.ItemsAvailable.Count == 0)
                     {
                         Console.WriteLine("There is nothing to explore here.");
                         return;
                     }
 
-                    // 1. Listing down all primary items in the current location
                     Console.WriteLine($"\n");
                     Console.WriteLine($"Available items/furnitures in {currentRoom.Name}:\n");
                     displayItemsAvailable(currentRoom);
                     Console.Write("Select item number to inspect: ");
 
-                    if (int.TryParse(Console.ReadLine(), out int pItemChoice) && pItemChoice >= 1 && pItemChoice <= currentRoom.itemsAvailable.Count)
-
+                    if (int.TryParse(Console.ReadLine(), out int pItemChoice) && pItemChoice >= 1 && pItemChoice <= currentRoom.ItemsAvailable.Count)
                     {
-                        var selectedPrimary = currentRoom.itemsAvailable[pItemChoice - 1] as PrimaryItem;
-                        if (selectedPrimary.Name == "Laundry Basket with stack of clothes") 
+                        var selectedPrimary = currentRoom.ItemsAvailable[pItemChoice - 1] as PrimaryItem;
+                        if (selectedPrimary.Name == "Laundry Basket with stack of clothes")
                         {
-                            delayedText($"Congratulations,your guess is correct... ", 30, resetColorField, resetColorField);
-                            delayedText($"Selected Item: {selectedPrimary.Name} ", 30, resetColorField, resetColorField);
-                            delayedText($"Going to {selectedPrimary.Name} .....", 50, resetColorField, resetColorField);
+                            delayedText($"Congratulations,your guess is correct... ", 30, ResetColorField, ResetColorField);
+                            delayedText($"Selected Item: {selectedPrimary.Name} ", 30, ResetColorField, ResetColorField);
+                            delayedText($"Going to {selectedPrimary.Name} .....", 50, ResetColorField, ResetColorField);
                             Console.WriteLine($"\nWhat do you want to do with {selectedPrimary.Name}?\n");
                             var actions = Enum.GetValues(typeof(ActionType)).Cast<ActionType>().ToList();
                             for (int i = 0; i < actions.Count; i++)
@@ -574,7 +556,7 @@ namespace Project_OOP_2._0
                                 ValidateActionResult = validateAction(selectedPrimary, selectedAction);
                                 if (ValidateActionResult == false)
                                 {
-                                    delayedText($"Wrong action....but the item you just interacted with is correct", 30, resetColorField, resetColorField);
+                                    delayedText($"Wrong action....but the item you just interacted with is correct", 30, ResetColorField, ResetColorField);
                                 }
                             }
                             else
@@ -584,9 +566,8 @@ namespace Project_OOP_2._0
                         }
                         else
                         {
-                            Console.WriteLine("This is not a suiable place to hide the car key....");
+                            Console.WriteLine("This is not a suitable place to hide the car key....");
                         }
-                        
                     }
                     else
                     {
@@ -594,39 +575,41 @@ namespace Project_OOP_2._0
                     }
                 }
             }
-            catch (Exception ex) //Exception Handling
+            catch (Exception ex)
             {
                 Console.WriteLine($"Error: {ex.Message}. Please try again");
             }
         }
 
+        //OOP Concept applied: POLYMORPHISM (Method Overriding - specific implementation for this scene, different from other scenes)
         public override void playScene(GameEngine engine)
         {
-            engine.mainCharacterCat.currentLocation = engine.HouseSpaceList[5]; 
+            engine.MainCharacterCat.CurrentLocation = engine.HouseSpaceList[5];
             string scene2 = @"
             =======================================================
                             SCENE 2: THE MEETUP
-             =======================================================
+            =======================================================
             ";
-            Console.WriteLine(scene2);
-            engine.husband.displayDialogue($"\"get up {engine.mainCharacterCat.Name}. Papa wants to shower...\"", 50, resetColorField, resetColorField);
-            delayedText($"{engine.mainCharacterCat.Name} finally snapped out of his shock. He jumped down from the sofa to the floor.", 50, resetColorField, resetColorField);
-            engine.husband.displayDialogue($"\"Shower, then go buy groceries, then bake the cake, then she comes over... wow, it's gonna be a great day\"", 50, resetColorField, resetColorField);
-            delayedText($"{engine.mainCharacterCat.Name} knew he had to stop this meeting. He thought of hiding the car keys. ", 50, resetColorField, resetColorField);
+            delayedText(scene2, 10, Tangerine, ResetColorField);
+            engine.Husband.displayDialogue($"\"get up {engine.MainCharacterCat.Name}. Papa wants to shower...\"", 50, ResetColorField, ResetColorField);
+            delayedText($"{engine.MainCharacterCat.Name} finally snapped out of his shock. He jumped down from the sofa to the floor.", 50, ResetColorField, ResetColorField);
+            engine.Husband.displayDialogue($"\"Shower, then go buy groceries, then bake the cake, then she comes over... wow, it's gonna be a great day\"", 50, ResetColorField, ResetColorField);
+            delayedText($"{engine.MainCharacterCat.Name} knew he had to stop this meeting. He thought of hiding the car keys. ", 50, ResetColorField, ResetColorField);
             Console.WriteLine("\n===========================================================================");
-            Console.WriteLine($"MISSION: Find {engine.husband.Name}'s car key");
+            Console.WriteLine($"MISSION: Find {engine.Husband.Name}'s car key");
             Console.WriteLine($"Hint: It is located on a thing, that people always put another things on it");
             Console.WriteLine("===========================================================================\n");
             do
             {
                 exploreHouse(engine);
             } while (ValidateActionResult == false);
-            ValidateActionResult = false; //reset the ValidateActionResult for the next use in this scene
+            ValidateActionResult = false;
             Console.Clear();
-            delayedText($"Congratulations, you found {engine.husband.Name}'s car key.", 50, resetColorField, resetColorField);
-            delayedText($"Now {engine.mainCharacterCat.Name} wanted to hide the car key in one of the items in the house.", 50, resetColorField, resetColorField);
+            delayedText($"Congratulations, you found {engine.Husband.Name}'s car key.", 50, ResetColorField, ResetColorField);
+            delayedText($"Now {engine.MainCharacterCat.Name} wanted to hide the car key in one of the items in the house.", 50, ResetColorField, ResetColorField);
             Console.WriteLine("\n===========================================================================");
-            Console.WriteLine($"MISSION: Hide {engine.husband.Name}'s car key...");
+            Console.WriteLine($"MISSION: Hide {engine.Husband.Name}'s car key...");
+            Console.WriteLine($"Hint: Where do people put their dirty clothes into?");
             Console.WriteLine("===========================================================================\n");
             string missionName = "Hide the car key";
             do
@@ -634,36 +617,34 @@ namespace Project_OOP_2._0
                 exploreHouse(engine, missionName);
             } while (ValidateActionResult == false);
             ValidateActionResult = false;
-            delayedText($"{engine.mainCharacterCat.Name} buried the car key deep inside a pile of dirty clothes in a laundry basket.", 50, resetColorField, resetColorField);
-            delayedText($"Then, it returned to the living room to watch {engine.husband.Name}'s next move. ", 50, resetColorField, resetColorField);
-            engine.mainCharacterCat.currentLocation = engine.HouseSpaceList[5];
+            delayedText($"{engine.MainCharacterCat.Name} buried the car key deep inside a pile of dirty clothes in a laundry basket.", 50, ResetColorField, ResetColorField);
+            delayedText($"Then, it returned to the living room to watch {engine.Husband.Name}'s next move. ", 50, ResetColorField, ResetColorField);
+            engine.MainCharacterCat.CurrentLocation = engine.HouseSpaceList[5];
             Console.ReadLine();
-            delayedText($"After showering and getting ready, {engine.husband.Name} looked for his keys. He checked the bedside table where he usually left them. Nothing. He searched the whole room. Still nothing.", 50, resetColorField, resetColorField);
+            delayedText($"After showering and getting ready, {engine.Husband.Name} looked for his keys. He checked the bedside table where he usually left them. Nothing. He searched the whole room. Still nothing.", 50, ResetColorField, ResetColorField);
             Console.ReadLine();
-            delayedText($"Then, he remembered his keys had a location tracking feature. He used the app on his phone to play a sound. Beep... beep... {engine.husband.Name} followed the sound and found his keys in the dirty laundry basket.", 50, resetColorField, resetColorField);
-            engine.husband.displayDialogue($"\"How did my key end up here? I don't remember putting it here...\"", 50, resetColorField, resetColorField);
-            delayedText($"But he ignored the feeling, started the engine, and went out to buy ingredients for the cake.", 50, resetColorField, resetColorField);
-            delayedText($"End of Scene 2...", 50, resetColorField, resetColorField);
+            delayedText($"Then, he remembered his keys had a location tracking feature. He used the app on his phone to play a sound. Beep... beep... {engine.Husband.Name} followed the sound and found his keys in the dirty laundry basket.", 50, ResetColorField, ResetColorField);
+            engine.Husband.displayDialogue($"\"How did my key end up here? I don't remember putting it here...\"", 50, ResetColorField, ResetColorField);
+            delayedText($"But he ignored the feeling, started the engine, and went out to buy ingredients for the cake.", 50, ResetColorField, ResetColorField);
+            delayedText($"End of Scene 2...", 50, ResetColorField, ResetColorField);
         }
     }
 
-    internal class Scene3 : Scene
+    internal class Scene3 : Scene //OOP Concept applied: INHERITANCE (Scene3 is a child class that inherits from the abstract class Scene, and provides specific implementation for the playScene method)
     {
-        //Constructor
         public Scene3(string givenName)
         {
-            Name = givenName;
+            this.Name = givenName;
         }
 
+        //OOP Concept applied: POLYMORPHISM (Method Overriding - specific implementation for this scene, different from other scenes)
         public override bool validateAction(SecondaryItem item, ActionType action)
         {
-            // 1. Check for the SUCCESS (Claw + Sack Opening)
             if (item.Name == "Sack Opening" && action == ActionType.Claw)
             {
-                return true; // This will trigger the animation in playScene
+                return true;
             }
 
-            // 2. Handle the "Wrong" items using their SECONDARY names
             if (item.Name == "Tires")
             {
                 Console.WriteLine("\nThe tires are too tough for my claws. I need something breakable.");
@@ -688,13 +669,12 @@ namespace Project_OOP_2._0
             return false;
         }
 
+        //OOP Concept applied: POLYMORPHISM (Method Overriding - specific implementation for this scene, different from other scenes)
         public override void exploreHouse(GameEngine engine)
         {
-            // RESET the result at the start of every turn so previous 
-            // actions don't interfere with the current choice.
             ValidateActionResult = false;
 
-            Console.WriteLine($"\n[Current Location: {engine.mainCharacterCat.currentLocation?.Name ?? "Not set"}]");
+            Console.WriteLine($"\n[Current Location: {engine.MainCharacterCat.CurrentLocation?.Name ?? "Not set"}]");
             Console.WriteLine();
             Console.Write("Press 'M' to display the house map, 'E' to identify available primary(main) items in the current location, and 'C' to go to another location: ");
 
@@ -707,14 +687,14 @@ namespace Project_OOP_2._0
                 {
                     Console.WriteLine("===========================================================================");
                     Console.WriteLine("\nHOUSE MAP:");
-                    engine.house.displayMap();
+                    engine.House.displayMap();
                     Console.WriteLine("===========================================================================");
                     Console.WriteLine("\n");
                 }
                 else if (input == 'C')
                 {
                     Console.WriteLine("\n");
-                    Console.WriteLine($"[Current Location: {engine.mainCharacterCat.currentLocation.Name}]\n");
+                    Console.WriteLine($"[Current Location: {engine.MainCharacterCat.CurrentLocation.Name}]\n");
                     Console.WriteLine($"Available locations (rooms/space) in the house:\n");
                     for (int i = 0; i < engine.HouseSpaceList.Count; i++)
                     {
@@ -727,7 +707,7 @@ namespace Project_OOP_2._0
                     {
                         HouseSpace selectedRoom = engine.HouseSpaceList[roomChoice - 1];
                         goTo(selectedRoom);
-                        engine.mainCharacterCat.currentLocation = selectedRoom;
+                        engine.MainCharacterCat.CurrentLocation = selectedRoom;
                     }
                     else
                     {
@@ -736,8 +716,8 @@ namespace Project_OOP_2._0
                 }
                 else if (input == 'E')
                 {
-                    var currentRoom = engine.mainCharacterCat.currentLocation;
-                    if (currentRoom == null || currentRoom.itemsAvailable.Count == 0)
+                    var currentRoom = engine.MainCharacterCat.CurrentLocation;
+                    if (currentRoom == null || currentRoom.ItemsAvailable.Count == 0)
                     {
                         Console.WriteLine("There is nothing to explore here.");
                         return;
@@ -748,21 +728,19 @@ namespace Project_OOP_2._0
                     displayItemsAvailable(currentRoom);
                     Console.Write("Select item number to inspect: ");
 
-                    if (int.TryParse(Console.ReadLine(), out int pItemChoice) && pItemChoice >= 1 && pItemChoice <= currentRoom.itemsAvailable.Count)
+                    if (int.TryParse(Console.ReadLine(), out int pItemChoice) && pItemChoice >= 1 && pItemChoice <= currentRoom.ItemsAvailable.Count)
                     {
-                        var selectedPrimary = currentRoom.itemsAvailable[pItemChoice - 1] as PrimaryItem;
+                        var selectedPrimary = currentRoom.ItemsAvailable[pItemChoice - 1] as PrimaryItem;
 
-                        // IMPORTANT FIX: Check if selectedPrimary is null after casting
                         if (selectedPrimary == null)
                         {
                             Console.WriteLine("This item cannot be inspected.");
                             return;
                         }
 
-                        delayedText($"Selected Item: {selectedPrimary.Name} ", 30, resetColorField, resetColorField);
-                        delayedText($"Going to {selectedPrimary.Name} .....", 50, resetColorField, resetColorField);
+                        delayedText($"Selected Item: {selectedPrimary.Name} ", 30, ResetColorField, ResetColorField);
+                        delayedText($"Going to {selectedPrimary.Name} .....", 50, ResetColorField, ResetColorField);
 
-                        // This check is now safe because you added secondary items in GameEngine
                         if (selectedPrimary.AvailableSecondaryItem.Count == 0)
                         {
                             Console.WriteLine("Nothing to do here. (No usable items on/approximate to this item)");
@@ -779,7 +757,7 @@ namespace Project_OOP_2._0
                         if (int.TryParse(Console.ReadLine(), out int sItemChoice) && sItemChoice >= 1 && sItemChoice <= selectedPrimary.AvailableSecondaryItem.Count)
                         {
                             var selectedSecondary = selectedPrimary.AvailableSecondaryItem[sItemChoice - 1];
-                            delayedText($"Selected Item: {selectedSecondary.Name} ", 30, resetColorField, resetColorField);
+                            delayedText($"Selected Item: {selectedSecondary.Name} ", 30, ResetColorField, ResetColorField);
 
                             Console.WriteLine($"\nWhat do you want to do with {selectedSecondary.Name}?\n");
                             var actions = Enum.GetValues(typeof(ActionType)).Cast<ActionType>().ToList();
@@ -794,13 +772,10 @@ namespace Project_OOP_2._0
                             {
                                 ActionType selectedAction = actions[actionChoice - 1];
 
-                                // This calls the validateAction you wrote at the top of Scene3
                                 ValidateActionResult = validateAction(selectedSecondary, selectedAction);
 
                                 if (ValidateActionResult == false)
                                 {
-                                    // If validateAction returned false, it means it wasn't the "winning" action
-                                    // (But your funny messages inside validateAction will still have printed!)
                                     Console.WriteLine("\n[Action completed, but the mission continues...]");
                                 }
                             }
@@ -821,7 +796,6 @@ namespace Project_OOP_2._0
                 }
                 else
                 {
-                    // Using a simple message instead of throwing an Exception to prevent the game from crashing
                     Console.WriteLine("Invalid input! Please press M, E, or C.");
                 }
             }
@@ -831,59 +805,52 @@ namespace Project_OOP_2._0
             }
         }
 
+        //OOP Concept applied: POLYMORPHISM (Method Overriding - specific implementation for this scene, different from other scenes)
         public override void playScene(GameEngine engine)
         {
-            string Tangerine = "\x1b[38;2;255;153;51m";
-            string reset = "\x1b[0m";
-            string header = @"
+            string scene3 = @"
              =======================================================
                           SCENE 3: THE KIBBLE CHAOS
              =======================================================
             ";
-            delayedText(header, 10, Tangerine, reset);
+            delayedText(scene3, 10, Tangerine, ResetColorField);
             var garageSpace = engine.HouseSpaceList.FirstOrDefault(space => space.Name == "Garage");
             if (garageSpace != null)
             {
-                var husbandCar = garageSpace.itemsAvailable.FirstOrDefault(item => item.Name == "Husband Car");
+                var husbandCar = garageSpace.ItemsAvailable.FirstOrDefault(item => item.Name == "Husband Car");
                 if (husbandCar != null)
                 {
-                    garageSpace.itemsAvailable.Remove(husbandCar);
+                    garageSpace.ItemsAvailable.Remove(husbandCar);
                 }
             }
 
-            delayedText($"{engine.mainCharacterCat.Name} said to himself, \"Oh, that wasn't enough. I need to do something else to cancel this meeting...\"", 50, reset, reset);
-            delayedText($"{engine.mainCharacterCat.Name} roamed the house looking for another distraction.", 50, reset, reset);
-            delayedText($"MISSION: Find the new sack of food in the Garage and create a distraction!", 50, Tangerine, reset);
+            delayedText($"{engine.MainCharacterCat.Name} said to himself, \"Oh, that wasn't enough. I need to do something else to cancel this meeting...\"", 50, ResetColorField, ResetColorField);
+            delayedText($"{engine.MainCharacterCat.Name} roamed the house looking for another distraction.", 50, ResetColorField, ResetColorField);
+            delayedText($"MISSION: Find the new sack of food in the Garage and create a distraction!", 50, Tangerine, ResetColorField);
 
             bool scene3Completed = false;
 
             while (!scene3Completed)
             {
-                // 1. This runs the menu. Inside here, ValidateActionResult becomes TRUE 
-                // only if user picks "Sack Opening" and "Claw".
                 exploreHouse(engine);
 
-                // 2. CHECK SUCCESS: We look for the location and the result from validateAction
-                if (engine.mainCharacterCat.currentLocation.Name == "Garage" && ValidateActionResult == true)
+                if (engine.MainCharacterCat.CurrentLocation.Name == "Garage" && ValidateActionResult == true)
                 {
-                    // We move the mission logic here so it triggers immediately
-                    delayedText($"\nIn the garage, {engine.mainCharacterCat.Name} saw the brand new 5kg sack of cat food.", 50, reset, reset);
-                    delayedText("An idea struck him.", 50, Tangerine, reset);
+                    delayedText($"\nIn the garage, {engine.MainCharacterCat.Name} saw the brand new 5kg sack of cat food.", 50, ResetColorField, ResetColorField);
+                    delayedText("An idea struck in its mind", 50, Tangerine, ResetColorField);
 
-                    // TRIGGER THE ANIMATION
-                    TearBagAnimation(Tangerine, reset);
+                    TearBagAnimation(Tangerine, ResetColorField);
 
-                    delayedText($"{engine.mainCharacterCat.Name} clawed at the sack aggressively until it tore open!", 50, reset, reset);
-                    delayedText($"He then scattered the kibble all over the garage floor, creating a massive mess to delay the date.", 50, reset, reset);
+                    delayedText($"{engine.MainCharacterCat.Name} clawed at the sack aggressively until it tore open!", 50, ResetColorField, ResetColorField);
+                    delayedText($"It then scattered the kibble all over the garage floor, creating a massive mess to delay the date.", 50, ResetColorField, ResetColorField);
 
-                    delayedText("\nMISSION ACCOMPLISHED: The garage is now a kibble minefield.", 60, Tangerine, reset);
+                    delayedText("\nMISSION ACCOMPLISHED: The garage is now a kibble minefield.", 60, Tangerine, ResetColorField);
 
-                    scene3Completed = true; // This ends the loop
+                    scene3Completed = true;
                 }
             }
         }
 
-        // Animation method
         private void TearBagAnimation(string color, string reset)
         {
             string frame1 = @"
@@ -912,7 +879,7 @@ namespace Project_OOP_2._0
             Console.Clear();
             foreach (string frame in frames)
             {
-                Console.SetCursorPosition(0, 5); // to keep the bag in the same place
+                Console.SetCursorPosition(0, 5);
                 Console.WriteLine(color + frame + reset);
                 Thread.Sleep(400);
             }
@@ -921,14 +888,14 @@ namespace Project_OOP_2._0
         }
     }
 
-    internal class Scene4 : Scene
+    internal class Scene4 : Scene ////OOP Concept applied: POLYMORPHISM (Method Overriding - specific implementation for this scene, different from other scenes)
     {
-        //Constructor
         public Scene4(string givenName)
         {
-            Name = givenName;
+            this.Name = givenName;
         }
 
+        //OOP Concept applied: POLYMORPHISM (Method Overriding - specific implementation for this scene, different from other scenes)
         public override bool validateAction(SecondaryItem item, ActionType action)
         {
             bool isValid = false;
@@ -939,6 +906,7 @@ namespace Project_OOP_2._0
             return isValid;
         }
 
+        //OOP Concept applied: POLYMORPHISM (Method Overriding - specific implementation for this scene, different from other scenes)
         public override void playScene(GameEngine engine)
         {
             string scene4 = @"
@@ -947,124 +915,120 @@ namespace Project_OOP_2._0
              =======================================================
             ";
 
-            // unhide GarageHusbandCar
             var garage = engine.HouseSpaceList.FirstOrDefault(space => space.Name == "Garage");
-            var husbandCar = garage.itemsAvailable.FirstOrDefault(item => item.Name == "HusbandCar");
+            var husbandCar = garage.ItemsAvailable.FirstOrDefault(item => item.Name == "HusbandCar");
             if (husbandCar != null)
             {
-                //husbandCar.IsHidden = false; // unhide
+
             }
 
-            // add grocery bag
-            // cari Kitchen asal dari game engine
             var kitchen = engine.HouseSpaceList.FirstOrDefault(space => space.Name == "Kitchen");
+            var kitchenBarTable = kitchen.ItemsAvailable.FirstOrDefault(item => item.Name == "Bar Table") as PrimaryItem;
 
-            // cari bar table asal
-            var kitchenBarTable = kitchen.itemsAvailable.FirstOrDefault(item => item.Name == "Bar Table") as PrimaryItem;
-
-            // tambah grocery bag ke bar table asal
             SecondaryItem groceryBag = new SecondaryItem("Grocery Bag", kitchen.Name);
             kitchenBarTable.AvailableSecondaryItem.Add(groceryBag);
 
-            delayedText(scene4, 10, resetColorField, resetColorField);
+            delayedText(scene4, 10, Tangerine, ResetColorField);
 
-            delayedText($"Upon returning home, {engine.husband.Name} was shocked to see cat food scattered all over the garage floor", 50, resetColorField, resetColorField);
+            delayedText($"Upon returning home, {engine.Husband.Name} was shocked to see cat food scattered all over the garage floor", 50, ResetColorField, ResetColorField);
 
-            engine.husband.displayDialogue($"\"Hah! How did the cat food bag get torn? And it's everywhere!\"", 50, resetColorField, resetColorField);
-
-            Console.ReadLine();
-
-            delayedText($"After parking, he entered the house holding the grocery bags. He saw {engine.mainCharacterCat.Name} sitting on his mat, stiff, pretending not to look. " +
-                $"{engine.husband.Name} put the groceries in the kitchen, then picked {engine.mainCharacterCat.Name} up and looked him in the eye.", 50, resetColorField, resetColorField);
-
-            engine.husband.displayDialogue($"\"{engine.mainCharacterCat.Name} did you tear the food bag and make a mess?\"", 50, resetColorField, resetColorField);
+            engine.Husband.displayDialogue($"\"Hah! How did the cat food bag get torn? And it's everywhere!\"", 50, ResetColorField, ResetColorField);
 
             Console.ReadLine();
 
-            delayedText($"{engine.mainCharacterCat.Name} just meowed, effectively admitting it in cat language.", 50, resetColorField, resetColorField);
+            delayedText($"After parking, he entered the house holding the grocery bags. He saw {engine.MainCharacterCat.Name} sitting on his mat, stiff, pretending not to look. " +
+                $"{engine.Husband.Name} put the groceries in the kitchen, then picked {engine.MainCharacterCat.Name} up and looked him in the eye.", 50, ResetColorField, ResetColorField);
 
-            engine.husband.displayDialogue($"\"It must be you, {engine.mainCharacterCat.Name}." +
-                $" Who else would it be?\"", 50, resetColorField, resetColorField);
-
-            Console.ReadLine();
-
-            delayedText($"{engine.husband.Name} said sternly. Then his voice softened.", 50, resetColorField, resetColorField);
-
-            engine.husband.displayDialogue($"\"Sigh, {engine.mainCharacterCat.Name}, {engine.mainCharacterCat.Name}... why are you acting up today?\"", 50, resetColorField, resetColorField);
+            engine.Husband.displayDialogue($"\"{engine.MainCharacterCat.Name} did you tear the food bag and make a mess?\"", 50, ResetColorField, ResetColorField);
 
             Console.ReadLine();
 
-            delayedText($"He put {engine.mainCharacterCat.Name} down and grabbed a broom to clean the garage.", 50, resetColorField, resetColorField);
+            delayedText($"{engine.MainCharacterCat.Name} just meowed, effectively admitting it in cat language.", 50, ResetColorField, ResetColorField);
 
-            delayedText($"Seizing the oppurtunity while {engine.husband.Name} swept the garage, it wanted to create another mess at another place.", 50, resetColorField, resetColorField);
+            engine.Husband.displayDialogue($"\"It must be you, {engine.MainCharacterCat.Name}." +
+                $" Who else would it be?\"", 50, ResetColorField, ResetColorField);
+
+            Console.ReadLine();
+
+            delayedText($"{engine.Husband.Name} said sternly. Then his voice softened.", 50, ResetColorField, ResetColorField);
+
+            engine.Husband.displayDialogue($"\"Sigh, {engine.MainCharacterCat.Name}, {engine.MainCharacterCat.Name}... why are you acting up today?\"", 50, ResetColorField, ResetColorField);
+
+            Console.ReadLine();
+
+            delayedText($"He put {engine.MainCharacterCat.Name} down and grabbed a broom to clean the garage.", 50, ResetColorField, ResetColorField);
+
+            delayedText($"Seizing the oppurtunity while {engine.Husband.Name} swept the garage, it wanted to create another mess at another place.", 50, ResetColorField, ResetColorField);
 
             Console.Clear();
 
             Console.WriteLine("\n===========================================================================");
-            Console.WriteLine($"MISSION: The player needs to create a mess at one of the house space again.");
+            Console.WriteLine($"MISSION: {engine.MainCharacterCat.Name} wanted to create a mess at one of the house space again.");
+            Console.WriteLine($"HINT: Where do you think {engine.Husband.Name} put the grocery bag at the house?");
             Console.WriteLine("===========================================================================\n");
 
-            engine.mainCharacterCat.currentLocation = engine.HouseSpaceList[5]; // remove this later
+            engine.MainCharacterCat.CurrentLocation = engine.HouseSpaceList[5];
 
             do
             {
                 exploreHouse(engine);
             } while (ValidateActionResult == false);
 
-            ValidateActionResult = false; // reset the ValidateActionResult for the next use in this scene
+            ValidateActionResult = false;
             Console.WriteLine();
-            delayedText($"It saw a carton of eggs inside the grocery bag, located on top of the bar table.", 50, resetColorField, resetColorField);
+            delayedText($"It saw a carton of eggs inside the grocery bag, located on top of the bar table.", 50, ResetColorField, ResetColorField);
             Console.Clear();
 
-            delayedText($"With all his might, it leaped and shoved the GroceryBag off the kitchen's bar table.", 50, resetColorField, resetColorField);
+            delayedText($"With all his might, it leaped and shoved the GroceryBag off the kitchen's bar table.", 50, ResetColorField, ResetColorField);
 
-            delayedText($"SPLAT.", 50, resetColorField, resetColorField);
+            delayedText($"SPLAT.", 50, ResetColorField, ResetColorField);
 
-            delayedText($"{engine.husband.Name} snapped.", 50, resetColorField, resetColorField);
+            delayedText($"{engine.Husband.Name} snapped.", 50, ResetColorField, ResetColorField);
 
-            engine.husband.displayDialogue($"\"{engine.mainCharacterCat.Name}!! What is wrong with you?! Argh... why are you so aggressive today? Tearing food bag, now breaking the eggs!\"",
-                50, resetColorField, resetColorField);
+            engine.Husband.displayDialogue($"\"{engine.MainCharacterCat.Name}!! What is wrong with you?! Argh... why are you so aggressive today? Tearing food bag, now breaking the eggs!\"",
+                50, ResetColorField, ResetColorField);
 
-            delayedText($"{engine.mainCharacterCat.Name} only replied,", 50, resetColorField, resetColorField);
+            delayedText($"{engine.MainCharacterCat.Name} only replied,", 50, ResetColorField, ResetColorField);
 
-            engine.mainCharacterCat.displayDialogue($"\"Meow.\"", 50, resetColorField, resetColorField);
+            engine.MainCharacterCat.displayDialogue($"\"Meow.\"", 50, ResetColorField, ResetColorField);
 
-            engine.husband.displayDialogue($"\"Sorry but Papa has to put you in the cage for a while.\"", 50, resetColorField, resetColorField);
+            engine.Husband.displayDialogue($"\"Sorry but Papa has to put you in the cage for a while.\"", 50, ResetColorField, ResetColorField);
 
-            delayedText($"{engine.mainCharacterCat.Name} was placed in the cage located in the garage. Even though the cage was spacious with two levels, {engine.mainCharacterCat.Name} was trapped." +
-                $"He could no longer interfere.", 50, resetColorField, resetColorField);
+            delayedText($"{engine.MainCharacterCat.Name} was placed in the cage located in the garage. Even though the cage was spacious with two levels, {engine.MainCharacterCat.Name} was trapped." +
+                $"He could no longer interfere.", 50, ResetColorField, ResetColorField);
 
-            delayedText($"After locking the cage,{engine.husband.Name} took out his phone and called {engine.mistress.Name}.", 50, resetColorField, resetColorField);
+            delayedText($"After locking the cage,{engine.Husband.Name} took out his phone and called {engine.Mistress.Name}.", 50, ResetColorField, ResetColorField);
 
-            engine.mistress.displayDialogue($"\"Hey babe, I had some issues earlier... I'm just starting to bake now. Can you come a bit later? Maybe 5 PM?\"", 50, resetColorField, resetColorField);
+            engine.Mistress.displayDialogue($"\"Hey babe, I had some issues earlier... I'm just starting to bake now. Can you come a bit later? Maybe 5 PM?\"", 50, ResetColorField, ResetColorField);
 
-            engine.husband.displayDialogue($"\"Oh, okay...\"", 50, resetColorField, resetColorField);
+            engine.Husband.displayDialogue($"\"Oh, okay...\"", 50, ResetColorField, ResetColorField);
 
-            engine.mistress.displayDialogue($"\"Okay baby, bye...\"", 50, resetColorField, resetColorField);
+            engine.Mistress.displayDialogue($"\"Okay baby, bye...\"", 50, ResetColorField, ResetColorField);
 
-            delayedText($"{engine.mainCharacterCat.Name} heard the conversation.", 50, resetColorField, resetColorField);
+            delayedText($"{engine.MainCharacterCat.Name} heard the conversation.", 50, ResetColorField, ResetColorField);
 
-            engine.mainCharacterCat.displayDialogue($"\"So {engine.mistress.Name} will arrive at 5 PM...\"", 50, resetColorField, resetColorField);
+            engine.MainCharacterCat.displayDialogue($"\"So {engine.Mistress.Name} will arrive at 5 PM...\"", 50, ResetColorField, ResetColorField);
 
-            delayedText($"he thought.", 50, resetColorField, resetColorField);
+            delayedText($"he thought.", 50, ResetColorField, ResetColorField);
 
-            engine.mainCharacterCat.displayDialogue($"\"There is nothing else I can do now.\"", 50, resetColorField, resetColorField);
+            engine.MainCharacterCat.displayDialogue($"\"There is nothing else I can do now.\"", 50, ResetColorField, ResetColorField);
 
-            delayedText($"{engine.husband.Name} went to the kitchen and started baking.", 50, resetColorField, resetColorField);
+            delayedText($"{engine.Husband.Name} went to the kitchen and started baking.", 50, ResetColorField, ResetColorField);
 
-            engine.mainCharacterCat.currentLocation = engine.HouseSpaceList[6]; // player moves to the garage
+            engine.MainCharacterCat.CurrentLocation = engine.HouseSpaceList[6];
 
-            delayedText($"End of Scene 4...", 50, resetColorField, resetColorField);
+            delayedText($"End of Scene 4...", 50, ResetColorField, ResetColorField);
         }
     }
 
-    internal class Scene5 : Scene
+    internal class Scene5 : Scene //OOP Concept applied: INHERITANCE (Scene5 is a child class that inherits from the abstract class Scene, and provides specific implementation for the playScene method and validateAction methods)
     {
         public Scene5(string givenName)
         {
-            Name = givenName;
+            this.Name = givenName;
         }
 
+        //OOP Concept applied: POLYMORPHISM (Method Overriding - specific implementation for this scene, different from other scenes)
         public override bool validateAction(SecondaryItem item, ActionType action)
         {
             bool isValid = false;
@@ -1075,6 +1039,7 @@ namespace Project_OOP_2._0
             return isValid;
         }
 
+        //OOP Concept applied: POLYMORPHISM (Method Overriding - specific implementation for this scene, different from other scenes)
         public override bool validateAction(PrimaryItem item)
         {
             if (item.Name == "TV Cabinet")
@@ -1086,10 +1051,10 @@ namespace Project_OOP_2._0
 
         public void exploreHouse(GameEngine engine, string givenMissionName)
         {
-            Console.WriteLine($"\n[Current Location: {engine.mainCharacterCat.currentLocation?.Name ?? "Not set"}]");
+            Console.WriteLine($"\n[Current Location: {engine.MainCharacterCat.CurrentLocation?.Name ?? "Not set"}]");
             Console.WriteLine();
             Console.Write("Press 'M' to display the house map, 'E' to identify available primary(main) items in the current location, and 'C' to go to another location: ");
-            try //if the user input is not M, E, or C, throw an exception and catch it in the catch block, then prompt the user to try again
+            try
             {
                 char input = char.ToUpper(Console.ReadKey().KeyChar);
                 Console.WriteLine();
@@ -1098,14 +1063,14 @@ namespace Project_OOP_2._0
                 {
                     Console.WriteLine("===========================================================================");
                     Console.WriteLine("\nHOUSE MAP:");
-                    engine.house.displayMap();
+                    engine.House.displayMap();
                     Console.WriteLine("===========================================================================");
                     Console.WriteLine("\n");
                 }
                 else if (input == 'C')
                 {
                     Console.WriteLine("\n");
-                    Console.WriteLine($"[Current Location: {engine.mainCharacterCat.currentLocation.Name}]\n");
+                    Console.WriteLine($"[Current Location: {engine.MainCharacterCat.CurrentLocation.Name}]\n");
                     Console.WriteLine($"Available locations (rooms/space) in the house:\n");
                     for (int i = 0; i < engine.HouseSpaceList.Count; i++)
                     {
@@ -1118,7 +1083,7 @@ namespace Project_OOP_2._0
                     {
                         HouseSpace selectedRoom = engine.HouseSpaceList[roomChoice - 1];
                         goTo(selectedRoom);
-                        engine.mainCharacterCat.currentLocation = selectedRoom; // Update current location after moving
+                        engine.MainCharacterCat.CurrentLocation = selectedRoom;
                     }
                     else
                     {
@@ -1127,23 +1092,22 @@ namespace Project_OOP_2._0
                 }
                 else if (input == 'E')
                 {
-                    var currentRoom = engine.mainCharacterCat.currentLocation;
-                    if (currentRoom == null || currentRoom.itemsAvailable.Count == 0)
+                    var currentRoom = engine.MainCharacterCat.CurrentLocation;
+                    if (currentRoom == null || currentRoom.ItemsAvailable.Count == 0)
                     {
                         Console.WriteLine("There is nothing to explore here.");
                         return;
                     }
 
-                    // 1. Listing down all primary items in the current location
                     Console.WriteLine($"\n");
                     Console.WriteLine($"Available items/furnitures in {currentRoom.Name}:\n");
                     displayItemsAvailable(currentRoom);
                     Console.Write("Select item number to inspect: ");
 
-                    if (int.TryParse(Console.ReadLine(), out int pItemChoice) && pItemChoice >= 1 && pItemChoice <= currentRoom.itemsAvailable.Count)
+                    if (int.TryParse(Console.ReadLine(), out int pItemChoice) && pItemChoice >= 1 && pItemChoice <= currentRoom.ItemsAvailable.Count)
 
                     {
-                        var selectedPrimary = currentRoom.itemsAvailable[pItemChoice - 1] as PrimaryItem;
+                        var selectedPrimary = currentRoom.ItemsAvailable[pItemChoice - 1] as PrimaryItem;
                         ValidateActionResult = validateAction(selectedPrimary);
                         if (ValidateActionResult == false)
                         {
@@ -1156,12 +1120,13 @@ namespace Project_OOP_2._0
                     }
                 }
             }
-            catch (Exception ex) //Exception Handling
+            catch (Exception ex)
             {
                 Console.WriteLine($"Error: {ex.Message}. Please try again");
             }
         }
 
+        //OOP Concept applied: POLYMORPHISM (Method Overriding - specific implementation for this scene, different from other scenes)
         public override void playScene(GameEngine engine)
         {
             string scene5 = @"
@@ -1170,39 +1135,40 @@ namespace Project_OOP_2._0
              =======================================================
             ";
 
-            engine.mainCharacterCat.currentLocation = engine.HouseSpaceList[5]; //Set the current location of the cat to the first room in the house, which is the living room
+            engine.MainCharacterCat.CurrentLocation = engine.HouseSpaceList[5];
 
-            delayedText(scene5, 10, resetColorField, resetColorField);
-            delayedText("At 5:07 PM, a blue car arrived and parked in front of the gate.", 50, resetColorField, resetColorField);
-            delayedText($"{engine.mainCharacterCat.Name} watched as {engine.husband.Name} opened the gate. The car pulled into the garage. A woman stepped out.", 50, resetColorField, resetColorField);
-            delayedText($"\"Baby..!\" said {engine.husband.Name}.", 50, resetColorField, resetColorField);
-            delayedText("\"Yeah baby...... wow, nice house, eh\" the woman replied.", 50, resetColorField, resetColorField);
-            delayedText($"\"Come inside. Are you ready to taste my White Chocolate Macadamia cake?\"", 50, resetColorField, resetColorField);
-            delayedText($"\"Ready! I hope it tastes really good. Eh, a cat! You have a cat too?\" the woman asked, pointing at the cage.", 50, resetColorField, resetColorField);
-            delayedText($"\"{engine.husband.Name} walked to the cage, unlocked it, picked {engine.mainCharacterCat.Name} up, and brought him to {engine.mistress.Name}.\"", 50, resetColorField, resetColorField);
-            delayedText($"\"I bring my cats too. I just picked them up from the grooming service,\" the woman said, petting {engine.mainCharacterCat.Name}'s head.", 50, resetColorField, resetColorField);
-            delayedText($"She went to her car and brought out two Persian cats, one is grey and one is white.", 50, resetColorField, resetColorField);
+            delayedText(scene5, 10, Tangerine, ResetColorField);
+            delayedText("At 5:07 PM, a blue car arrived and parked in front of the gate.", 50, ResetColorField, ResetColorField);
+            delayedText($"{engine.MainCharacterCat.Name} watched as {engine.Husband.Name} opened the gate. The car pulled into the garage. A woman stepped out.", 50, ResetColorField, ResetColorField);
+            delayedText($"\"Baby..!\" said {engine.Husband.Name}.", 50, ResetColorField, ResetColorField);
+            delayedText("\"Yeah baby...... wow, nice house, eh\" the woman replied.", 50, ResetColorField, ResetColorField);
+            Console.ReadLine();
+            delayedText($"\"Come inside. Are you ready to taste my White Chocolate Macadamia cake?\"", 50, ResetColorField, ResetColorField);
+            delayedText($"\"Ready! I hope it tastes really good. Eh, a cat! You have a cat too?\" the woman asked, pointing at the cage.", 50, ResetColorField, ResetColorField);
+            delayedText($"\"{engine.Husband.Name} walked to the cage, unlocked it, picked {engine.MainCharacterCat.Name} up, and brought him to {engine.Mistress.Name}.\"", 50, ResetColorField, ResetColorField);
+            delayedText($"\"I bring my cats too. I just picked them up from the grooming service,\" the woman said, petting {engine.MainCharacterCat.Name}'s head.", 50, ResetColorField, ResetColorField);
+            delayedText($"She went to her car and brought out two Persian cats, one is grey and one is white.", 50, ResetColorField, ResetColorField);
 
-            delayedText("Let's put a name for the grey cat... ", 50, resetColorField, resetColorField);
-            getName(engine.greyCat, "grey cat");
+            delayedText("Let's put a name for the grey cat... ", 50, ResetColorField, ResetColorField);
+            getName(engine.GreyCat, "grey cat");
 
-            delayedText("Let's put a name for the white cat... ", 50, resetColorField, resetColorField);
-            getName(engine.whiteCat, "white cat");
+            delayedText("Let's put a name for the white cat... ", 50, ResetColorField, ResetColorField);
+            getName(engine.WhiteCat, "white cat");
 
-            delayedText($"\"The grey one is {engine.greyCat.Name}, and the white one is {engine.whiteCat.Name},\" she said.", 50, resetColorField, resetColorField);
-            delayedText($"\"Wow, you got very pretty cats there,\" said {engine.husband.Name}.", 50, resetColorField, resetColorField);
-            delayedText($"\"Thank you...\" said {engine.mistress.Name}.", 50, resetColorField, resetColorField);
-            delayedText($"{engine.mainCharacterCat.Name} confirmed it. This woman was definitely {engine.mistress.Name}.", 50, resetColorField, resetColorField);
-            delayedText($"\"Okay, let's go inside. You can bring your cat in.\"", 50, resetColorField, resetColorField);
+            delayedText($"\"The grey one is {engine.GreyCat.Name}, and the white one is {engine.WhiteCat.Name},\" she said.", 50, ResetColorField, ResetColorField);
+            delayedText($"\"Wow, you got very pretty cats there,\" said {engine.Husband.Name}.", 50, ResetColorField, ResetColorField);
+            delayedText($"\"Thank you...\" said {engine.Mistress.Name}.", 50, ResetColorField, ResetColorField);
+            delayedText($"{engine.MainCharacterCat.Name} confirmed it. This woman was definitely {engine.Mistress.Name}.", 50, ResetColorField, ResetColorField);
+            delayedText($"\"Okay, let's go inside. You can bring your cat in.\"", 50, ResetColorField, ResetColorField);
 
             Thread.Sleep(1500);
-            delayedText("...", 200, resetColorField, resetColorField);
+            delayedText("...", 200, ResetColorField, ResetColorField);
 
-            delayedText($"The atmosphere in the living room was romantic. {engine.husband.Name} and {engine.mistress.Name} sat close on the sofa, enjoying the freshly baked cake while watching a movie on Netflix.", 50, resetColorField, resetColorField);
-            delayedText($"\"It's delicious, I didn't expect you could bake,\" {engine.mistress.Name} praised, feeding a piece of cake to {engine.husband.Name}.", 50, resetColorField, resetColorField);
-            delayedText($"{engine.mainCharacterCat.Name} watched from his mat with a restless tail. His eyes were fixed on the TV cabinet.", 50, resetColorField, resetColorField);
-            delayedText($"Behind that cabinet was the main switch for the Smart Home CCTV. Before {engine.mistress.Name} arrived, {engine.husband.Name} had turned off the switch so the camera would be \"Offline.\" {engine.mainCharacterCat.Name} knew this because the small blue light on the camera was off.", 50, resetColorField, resetColorField);
-            delayedText($"{engine.mainCharacterCat.Name} knew that if the switch was pressed again, the camera would reactivate, and a notification would be sent to {engine.wife.Name}'s phone: \"CCTV Living Room is Online\".", 50, resetColorField, resetColorField);
+            delayedText($"The atmosphere in the living room was romantic. {engine.Husband.Name} and {engine.Mistress.Name} sat close on the sofa, enjoying the freshly baked cake while watching a movie on Netflix.", 50, ResetColorField, ResetColorField);
+            delayedText($"\"It's delicious, I didn't expect you could bake,\" {engine.Mistress.Name} praised, feeding a piece of cake to {engine.Husband.Name}.", 50, ResetColorField, ResetColorField);
+            delayedText($"{engine.MainCharacterCat.Name} watched from his mat with a restless tail. His eyes were fixed on the TV cabinet.", 50, ResetColorField, ResetColorField);
+            delayedText($"Behind that cabinet was the main switch for the Smart Home CCTV. Before {engine.Mistress.Name} arrived, {engine.Husband.Name} had turned off the switch so the camera would be \"Offline.\" {engine.MainCharacterCat.Name} knew this because the small blue light on the camera was off.", 50, ResetColorField, ResetColorField);
+            delayedText($"{engine.MainCharacterCat.Name} knew that if the switch was pressed again, the camera would reactivate, and a notification would be sent to {engine.Wife.Name}'s phone: \"CCTV Living Room is Online\".", 50, ResetColorField, ResetColorField);
             Console.WriteLine("\n===========================================================================");
             Console.WriteLine($"MISSION: GO TO THE BACK OF THE TV CABINET.");
             Console.WriteLine("===========================================================================\n");
@@ -1211,103 +1177,107 @@ namespace Project_OOP_2._0
             {
                 exploreHouse(engine, missionName);
             } while (ValidateActionResult == false);
-            ValidateActionResult = false; // reset the ValidateActionResult 
-            delayedText($"[CHECKPOINT] {engine.mainCharacterCat.Name} began to move. He walked slowly, trying to approach the TV cabinet.", 50, resetColorField, resetColorField);
-            delayedText($"However, his movement was detected by {engine.whiteCat.Name} and {engine.greyCat.Name}. They jumped down from the sofa and blocked {engine.mainCharacterCat.Name}'s path.", 50, resetColorField, resetColorField);
-            delayedText($"They weren't just blocking him; they were guarding their new \"master's\" territory. {engine.greyCat.Name} hissed loud, its fur standing on end, making it look twice {engine.mainCharacterCat.Name}'s size.", 50, resetColorField, resetColorField);
-            delayedText($"\"Meow!\" (Move!), {engine.mainCharacterCat.Name} warned. {engine.greyCat.Name} replied with a swift swipe of its claws, nicking {engine.mainCharacterCat.Name}'s left ear. A drop of blood fell.", 50, resetColorField, resetColorField);
-            delayedText($"{engine.mainCharacterCat.Name}'s patience snapped. He remembered {engine.wife.Name}'s gentle pets, the food she gave, the love she poured out. He would not let this house be taken over by intruders.", 50, resetColorField, resetColorField);
+            ValidateActionResult = false;
+            delayedText($"[CHECKPOINT] {engine.MainCharacterCat.Name} began to move. He walked slowly, trying to approach the TV cabinet.", 50, ResetColorField, ResetColorField);
+            delayedText($"However, his movement was detected by {engine.WhiteCat.Name} and {engine.GreyCat.Name}. They jumped down from the sofa and blocked {engine.MainCharacterCat.Name}'s path.", 50, ResetColorField, ResetColorField);
+            delayedText($"They weren't just blocking him; they were guarding their new \"master's\" territory. {engine.GreyCat.Name} hissed loud, its fur standing on end, making it look twice {engine.MainCharacterCat.Name}'s size.", 50, ResetColorField, ResetColorField);
+            delayedText($"\"Meow!\" (Move!), {engine.MainCharacterCat.Name} warned. {engine.GreyCat.Name} replied with a swift swipe of its claws, nicking {engine.MainCharacterCat.Name}'s left ear. A drop of blood fell.", 50, ResetColorField, ResetColorField);
+            delayedText($"{engine.MainCharacterCat.Name}'s patience snapped. He remembered {engine.Wife.Name}'s gentle pets, the food she gave, the love she poured out. He would not let this house be taken over by intruders.", 50, ResetColorField, ResetColorField);
 
             bool completeCombat1 = false;
             while (!completeCombat1)
             {
-                // Combat 1
-                delayedText($"[MISSION 1: COMBAT INITIATED] {engine.mainCharacterCat.Name} VS {engine.greyCat.Name}", 30, resetColorField, resetColorField);
-                bool wonFight1 = CombatLoop(engine.mainCharacterCat, engine.greyCat);
+                delayedText($"[MISSION 1: COMBAT INITIATED] {engine.MainCharacterCat.Name} VS {engine.GreyCat.Name}", 30, ResetColorField, ResetColorField);
+                bool wonFight1 = CombatLoop(engine.MainCharacterCat, engine.GreyCat);
 
                 if (!wonFight1)
                 {
-                    delayedText($"[GAME OVER] {engine.mainCharacterCat.Name} was defeated... Restarting from the checkpoint...", 50, resetColorField, resetColorField);
+                    delayedText($"[GAME OVER] {engine.MainCharacterCat.Name} was defeated... Restarting from the checkpoint...", 50, ResetColorField, ResetColorField);
                     Thread.Sleep(2000);
-                    engine.mainCharacterCat.HP = 80; // reset HP
-                    engine.greyCat.HP = 80; // reset enemy HP
-                    continue; // Loop back
+                    engine.MainCharacterCat.HP = 80;
+                    engine.GreyCat.HP = 80;
+                    continue;
                 }
                 completeCombat1 = true;
             }
 
-            delayedText($"{engine.greyCat.Name} is severely weakened and scurries away! Realizing who the true \"Alpha\" was, {engine.greyCat.Name} scurried away to hide behind the dining table, trembling in fear.", 50, resetColorField, resetColorField);
-            delayedText($"But the fight wasn't over. {engine.whiteCat.Name} suddenly ambushed {engine.mainCharacterCat.Name} from behind!", 50, resetColorField, resetColorField);
-            delayedText($"{engine.whiteCat.Name} gain some HP", 50, resetColorField, resetColorField);
-            engine.mainCharacterCat.HP += 40;
+            delayedText($"{engine.GreyCat.Name} is severely weakened and scurries away! Realizing who the true \"Alpha\" was, {engine.GreyCat.Name} scurried away to hide behind the dining table, trembling in fear.", 50, ResetColorField, ResetColorField);
+            delayedText($"But the fight wasn't over. {engine.WhiteCat.Name} suddenly ambushed {engine.MainCharacterCat.Name} from behind!", 50, ResetColorField, ResetColorField);
+            delayedText($"{engine.MainCharacterCat.Name} gain some HP", 50, ResetColorField, ResetColorField);
+            engine.MainCharacterCat.HP += 40;
 
             bool completeCombat2 = false;
             while (!completeCombat2)
             {
-                // Combat 2
-                delayedText($"[MISSION 2: COMBAT INITIATED] {engine.mainCharacterCat.Name} VS {engine.whiteCat.Name}", 30, resetColorField, resetColorField);
-                bool wonFight2 = CombatLoop(engine.mainCharacterCat, engine.whiteCat);
+                delayedText($"[MISSION 2: COMBAT INITIATED] {engine.MainCharacterCat.Name} VS {engine.WhiteCat.Name}", 30, ResetColorField, ResetColorField);
+                bool wonFight2 = CombatLoop(engine.MainCharacterCat, engine.WhiteCat);
 
                 if (!wonFight2)
                 {
-                    delayedText($"[GAME OVER] {engine.mainCharacterCat.Name} was defeated... Restarting from the checkpoint...", 50, resetColorField, resetColorField);
+                    delayedText($"[GAME OVER] {engine.MainCharacterCat.Name} was defeated... Restarting from the checkpoint...", 50, ResetColorField, ResetColorField);
                     Thread.Sleep(2000);
-                    engine.mainCharacterCat.HP = 80; // reset HP
-                    engine.greyCat.HP = 80; // reset enemy HP
-                    continue; // Loop back
+                    engine.MainCharacterCat.HP = 80;
+                    engine.GreyCat.HP = 80;
+                    continue;
                 }
                 completeCombat2 = true;
             }
 
-            delayedText($"{engine.whiteCat.Name} was severely weakened and scurries away!", 50, resetColorField, resetColorField);
-            delayedText($"{engine.whiteCat.Name} immediately retreated, sliding under the sofa to join its sibling.", 50, resetColorField, resetColorField);
-            delayedText($"{engine.mainCharacterCat.Name} stood tall, chest heaving, scanning the room with fiery eyes. {engine.mainCharacterCat.Name} Wins!", 50, resetColorField, resetColorField);
-            // The Climax
-            delayedText($"Without wasting time, {engine.mainCharacterCat.Name} ran back to the TV cabinet. He saw the CCTV wire hanging loose.", 50, resetColorField, resetColorField);
+            delayedText($"{engine.WhiteCat.Name} was severely weakened and scurries away!", 50, ResetColorField, ResetColorField);
+            delayedText($"{engine.WhiteCat.Name} immediately retreated, sliding under the sofa to join its sibling.", 50, ResetColorField, ResetColorField);
+            delayedText($"{engine.MainCharacterCat.Name} stood tall, chest heaving, scanning the room with fiery eyes. {engine.MainCharacterCat.Name} Wins!", 50, ResetColorField, ResetColorField);
+
+            delayedText($"Without wasting time, {engine.MainCharacterCat.Name} ran back to the TV cabinet. He saw the CCTV wire hanging loose.", 50, ResetColorField, ResetColorField);
+            Console.WriteLine("\n===========================================================================");
+            Console.WriteLine($"MISSION: GO TO THE BACK OF THE TV CABINET.");
+            Console.WriteLine("===========================================================================\n");
+
+
+
+
+
             do
             {
                 exploreHouse(engine);
             } while (ValidateActionResult == false);
-            ValidateActionResult = false; // reset the ValidateActionResult
+            ValidateActionResult = false;
             bool isCameraOnline = false;
             while (!isCameraOnline)
             {
-                isCameraOnline = PlugInWireMiniGame(engine.mainCharacterCat);
+                isCameraOnline = PlugInWireMiniGame(engine.MainCharacterCat);
 
                 if (!isCameraOnline)
                 {
-                    delayedText($"{engine.mainCharacterCat.Name} shook off the failure and gathered his strength to try again...", 50, "\x1b[38;2;255;153;51m", resetColorField);
+                    delayedText($"{engine.MainCharacterCat.Name} shook off the failure and gathered his strength to try again...", 50, "\x1b[38;2;255;153;51m", ResetColorField);
                     Thread.Sleep(1000);
                 }
             }
-            Console.Clear(); 
+            Console.Clear();
             Thread.Sleep(1500);
-            delayedText("...", 200, resetColorField, resetColorField);
+            delayedText("...", 200, ResetColorField, ResetColorField);
 
-            delayedText($"Meanwhile, hundreds of kilometers away: {engine.wife.Name}'s smartphone dinged. A notification appeared: [Smart Home]: Living Room Camera is now ONLINE.", 50, resetColorField, resetColorField);
-            delayedText($"{engine.wife.Name}, resting in her hotel room, was confused. \"Huh? Was the CCTV offline earlier?\" She opened the app to see what was happening. Her heart stopped. On the screen, she clearly saw {engine.husband.Name} sitting with a strange woman on their sofa.", 50, resetColorField, resetColorField);
-            delayedText($"Without hesitating, {engine.wife.Name} pressed the Screenshot button.", 50, resetColorField, resetColorField);
+            delayedText($"Meanwhile, hundreds of kilometers away: {engine.Wife.Name}'s smartphone dinged. A notification appeared: [Smart Home]: Living Room Camera is now ONLINE.", 50, ResetColorField, ResetColorField);
+            delayedText($"{engine.Wife.Name}, resting in her hotel room, was confused. \"Huh? Was the CCTV offline earlier?\" She opened the app to see what was happening. Her heart stopped. On the screen, she clearly saw {engine.Husband.Name} sitting with a strange woman on their sofa.", 50, ResetColorField, ResetColorField);
+            delayedText($"Without hesitating, {engine.Wife.Name} pressed the Screenshot button.", 50, ResetColorField, ResetColorField);
 
-            delayedText("Ring... Ring...", 100, resetColorField, resetColorField);
-            delayedText($"{engine.husband.Name}'s phone on the coffee table rang. The name \"Wife\" flashed on the screen. {engine.husband.Name} signaled {engine.mistress.Name} to be quiet. He picked up the phone, feigning a calm voice.", 50, resetColorField, resetColorField);
-            delayedText($"\"Hello honey... why are you calling? I was just about to sleep, pretty tired.\"", 50, resetColorField, resetColorField);
-            delayedText($"{engine.wife.Name} asked in a voice that was terrifyingly calm, \"Where are you?\"", 50, resetColorField, resetColorField);
-            delayedText($"\"At the hotel, honey. Like I said, I'm outstation too. Just got out of the shower. Are you okay?\" {engine.husband.Name} lied without guilt.", 50, resetColorField, resetColorField);
-            delayedText($"\"Oh... at the hotel...\" {engine.wife.Name} replied. \"Open WhatsApp for a second.\"", 50, resetColorField, resetColorField);
-            delayedText($"\"Why?\"", 50, resetColorField, resetColorField);
-            delayedText($"\"Just open it.\"", 50, resetColorField, resetColorField);
+            delayedText("Ring... Ring...", 100, ResetColorField, ResetColorField);
+            delayedText($"{engine.Husband.Name}'s phone on the coffee table rang. The name \"Wife\" flashed on the screen. {engine.Husband.Name} signaled {engine.Mistress.Name} to be quiet. He picked up the phone, feigning a calm voice.", 50, ResetColorField, ResetColorField);
+            delayedText($"\"Hello honey... why are you calling? I was just about to sleep, pretty tired.\"", 50, ResetColorField, ResetColorField);
+            delayedText($"{engine.Wife.Name} asked in a voice that was terrifyingly calm, \"Where are you?\"", 50, ResetColorField, ResetColorField);
+            delayedText($"\"At the hotel, honey. Like I said, I'm outstation too. Just got out of the shower. Are you okay?\" {engine.Husband.Name} lied without guilt.", 50, ResetColorField, ResetColorField);
+            delayedText($"\"Oh... at the hotel...\" {engine.Wife.Name} replied. \"Open WhatsApp for a second.\"", 50, ResetColorField, ResetColorField);
+            delayedText($"\"Why?\"", 50, ResetColorField, ResetColorField);
+            delayedText($"\"Just open it.\"", 50, ResetColorField, ResetColorField);
 
-            delayedText($"The line was still connected. {engine.husband.Name} pulled the phone away from his ear and opened WhatsApp. A picture message had just come in.", 50, resetColorField, resetColorField);
-            delayedText($"It was a screenshot of him and {engine.mistress.Name} sitting on the sofa, taken from the CCTV angle, one minute ago. Below the picture, there was a short sentence typed in capital letters:", 50, resetColorField, resetColorField);
-            delayedText($"\"THEN WHAT IS THIS?\"", 100, resetColorField, resetColorField);
+            delayedText($"The line was still connected. {engine.Husband.Name} pulled the phone away from his ear and opened WhatsApp. A picture message had just come in.", 50, ResetColorField, ResetColorField);
+            delayedText($"It was a screenshot of him and {engine.Mistress.Name} sitting on the sofa, taken from the CCTV angle, one minute ago. Below the picture, there was a short sentence typed in capital letters:", 50, ResetColorField, ResetColorField);
+            delayedText($"\"THEN WHAT IS THIS?\"", 100, ResetColorField, ResetColorField);
 
-            delayedText($"{engine.husband.Name}'s face went pale. The blood drained from his head. The phone nearly slipped from his hand. He looked up at the CCTV in the corner of the ceiling, which was now glowing with a steady blue light.", 50, resetColorField, resetColorField);
-            delayedText($"\"Honey... I... I can explain...\" His voice trembled.", 50, resetColorField, resetColorField);
+            delayedText($"{engine.Husband.Name}'s face went pale. The blood drained from his head. The phone nearly slipped from his hand. He looked up at the CCTV in the corner of the ceiling, which was now glowing with a steady blue light.", 50, ResetColorField, ResetColorField);
+            delayedText($"\"Honey... I... I can explain...\" His voice trembled.", 50, ResetColorField, ResetColorField);
 
-            delayedText("[SCENE 5 COMPLETE]", 30, resetColorField, resetColorField);
+            delayedText("[SCENE 5 COMPLETE]", 30, ResetColorField, ResetColorField);
         }
-
-        
 
         private bool PlugInWireMiniGame(MainCharacter playerCat)
         {
@@ -1315,7 +1285,7 @@ namespace Project_OOP_2._0
             Console.WriteLine("=======================================================");
             Console.WriteLine("                 MINI-GAME INITIATED                   ");
             Console.WriteLine("=======================================================\n");
-            delayedText($"Action: {playerCat.Name} bit the wire and pulled it toward the socket.", 30, resetColorField, resetColorField);
+            delayedText($"Action: {playerCat.Name} bit the wire and pulled it toward the socket.", 30, ResetColorField, ResetColorField);
             Console.WriteLine("It's tough! You need to use your entire body weight to shove it in!");
             Console.WriteLine("\nINSTRUCTIONS:");
             Console.WriteLine("Mash the [SPACEBAR] repeatedly to build momentum!");
@@ -1323,19 +1293,17 @@ namespace Project_OOP_2._0
             Console.WriteLine("\nPress ENTER when you are ready...");
             Console.ReadLine();
 
-            int targetPresses = 25; // Number of spacebar hits needed
+            int targetPresses = 25;
             int currentPresses = 0;
             int timeLimitSeconds = 5;
 
             System.Diagnostics.Stopwatch timer = new System.Diagnostics.Stopwatch();
             timer.Start();
 
-            // Clear the input buffer before starting the mashing phase
             while (Console.KeyAvailable) Console.ReadKey(true);
 
             while (timer.Elapsed.TotalSeconds < timeLimitSeconds && currentPresses < targetPresses)
             {
-                // Draw the progress bar dynamically
                 DrawProgressBar(currentPresses, targetPresses, timeLimitSeconds - (int)timer.Elapsed.TotalSeconds);
 
                 if (Console.KeyAvailable)
@@ -1346,37 +1314,32 @@ namespace Project_OOP_2._0
                         currentPresses++;
                     }
                 }
-
-                // Small sleep to prevent CPU hogging
                 Thread.Sleep(15);
             }
             DrawProgressBar(currentPresses, targetPresses, Math.Max(0, timeLimitSeconds - (int)timer.Elapsed.TotalSeconds));
             timer.Stop();
-            Console.WriteLine("\n"); // Move to a new line after the progress bar finishes drawing
+            Console.WriteLine("\n");
 
-            // Win/Loss Condition
             if (currentPresses >= targetPresses)
             {
-                // Success Text
-                delayedText("SUCCESS!", 20, "\x1b[32m", resetColorField); // Green text
-                delayedText($"Using all your strength, {playerCat.Name} shove the plug back into the wall outlet!", 40, resetColorField, resetColorField);
-                delayedText("Click.", 50, resetColorField, resetColorField);
-                delayedText("The light on the ceiling camera blinked red, then turned solid blue. ONLINE.", 50, resetColorField, resetColorField);
+                delayedText("SUCCESS!", 20, "\x1b[32m", ResetColorField);
+                delayedText($"Using all your strength, {playerCat.Name} shove the plug back into the wall outlet!", 40, ResetColorField, ResetColorField);
+                delayedText("Click.", 50, ResetColorField, ResetColorField);
+                delayedText("The light on the ceiling camera blinked red, then turned solid blue. ONLINE.", 50, ResetColorField, ResetColorField);
                 return true;
             }
             else
             {
-                // Fail Text
-                delayedText("FAILED!", 20, "\x1b[31m", resetColorField); // Red text
-                delayedText("Oof! Your paws slip on the floor. The heavy plug falls out of the socket.", 40, resetColorField, resetColorField);
-                delayedText("You need to try again!", 40, resetColorField, resetColorField);
+                delayedText("FAILED!", 20, "\x1b[31m", ResetColorField);
+                delayedText("Oof! Your paws slip on the floor. The heavy plug falls out of the socket.", 40, ResetColorField, ResetColorField);
+                delayedText("You need to try again!", 40, ResetColorField, ResetColorField);
                 return false;
             }
         }
 
         private void DrawProgressBar(int current, int target, int timeLeft)
         {
-            int barSize = 25; // Width of the progress bar in console characters
+            int barSize = 25;
             int progress = (int)((double)current / target * barSize);
 
             if (progress > barSize) progress = barSize;
@@ -1384,7 +1347,6 @@ namespace Project_OOP_2._0
             string filled = new string('█', progress);
             string empty = new string('-', barSize - progress);
 
-            // \r returns the cursor to the beginning of the line to overwrite the previous bar frame
             Console.Write($"\rForce: [{filled}{empty}] {current}/{target} | Time Left: {timeLeft}s   ");
         }
 
@@ -1408,25 +1370,25 @@ namespace Project_OOP_2._0
                 {
                     case "1":
                         damageDealt = rng.Next(15, 26);
-                        delayedText($"{playerCat.Name} uses {Cat.FightingOptions.Claw}! Deals {damageDealt} damage.", 20, resetColorField, resetColorField);
+                        delayedText($"{playerCat.Name} uses {Cat.FightingOptions.Claw}! Deals {damageDealt} damage.", 20, ResetColorField, ResetColorField);
                         break;
                     case "2":
                         damageDealt = rng.Next(10, 31);
-                        delayedText($"{playerCat.Name} uses {Cat.FightingOptions.Kick}! Deals {damageDealt} damage.", 20, resetColorField, resetColorField);
+                        delayedText($"{playerCat.Name} uses {Cat.FightingOptions.Kick}! Deals {damageDealt} damage.", 20, ResetColorField, ResetColorField);
                         break;
                     case "3":
                         if (rng.Next(0, 100) < 30)
                         {
-                            delayedText($"{playerCat.Name} uses {Cat.FightingOptions.Bite}... but misses!", 20, resetColorField, resetColorField);
+                            delayedText($"{playerCat.Name} uses {Cat.FightingOptions.Bite}... but misses!", 20, ResetColorField, ResetColorField);
                         }
                         else
                         {
                             damageDealt = rng.Next(20, 41);
-                            delayedText($"{playerCat.Name} lands a devastating {Cat.FightingOptions.Claw}! Deals {damageDealt} damage.", 20, resetColorField, resetColorField);
+                            delayedText($"{playerCat.Name} lands a devastating {Cat.FightingOptions.Claw}! Deals {damageDealt} damage.", 20, ResetColorField, ResetColorField);
                         }
                         break;
                     default:
-                        delayedText("Invalid move! You lost your turn.", 20, resetColorField, resetColorField);
+                        delayedText("Invalid move! You lost your turn.", 20, ResetColorField, ResetColorField);
                         break;
                 }
 
@@ -1436,20 +1398,21 @@ namespace Project_OOP_2._0
 
                 int enemyDamage = rng.Next(10, 25);
                 playerCat.HP -= enemyDamage;
-                delayedText($"{enemyCat.Name} strikes back! Deals {enemyDamage} damage to {playerCat.Name}.", 20, resetColorField, resetColorField);
+                delayedText($"{enemyCat.Name} strikes back! Deals {enemyDamage} damage to {playerCat.Name}.", 20, ResetColorField, ResetColorField);
             }
 
             return playerCat.HP > 0;
         }
-    } 
+    }
 
-    internal class Scene6 : Scene
+    internal class Scene6 : Scene ////OOP Concept applied: POLYMORPHISM (Method Overriding - specific implementation for this scene, different from other scenes)
     {
         public Scene6(string givenName)
         {
-            Name = givenName;
+            this.Name = givenName;
         }
 
+        //OOP Concept applied: POLYMORPHISM (Method Overriding - specific implementation for this scene, different from other scenes)
         public override void playScene(GameEngine engine)
         {
             string scene6Banner = @"
@@ -1458,82 +1421,79 @@ namespace Project_OOP_2._0
             =======================================================
         ";
 
-            string Tangerine = "\x1b[38;2;255;153;51m";
-            string SoftBlue = "\x1b[38;2;135;206;235m]";
-
-            delayedText(scene6Banner, 10, resetColorField, resetColorField);
+            delayedText(scene6Banner, 10, ResetColorField, ResetColorField);
             Console.ReadLine();
-            delayedText("One Month Later...", 100, resetColorField, resetColorField);
+            delayedText("One Month Later...", 100, ResetColorField, ResetColorField);
             Console.ReadLine();
             Console.Clear();
 
-            delayedText($"The atmosphere in the new apartment still felt foreign.", 50, resetColorField, resetColorField);
-            delayedText($"The smell of fresh paint mixed with the scent of cardboard boxes that hadn't been fully unpacked.", 50, resetColorField, resetColorField);
-            delayedText($"This living room was smaller than the old house, but for some reason, the air felt lighter and less suffocating.", 50, resetColorField, resetColorField);
+            delayedText($"The atmosphere in the new apartment still felt foreign.", 50, ResetColorField, ResetColorField);
+            delayedText($"The smell of fresh paint mixed with the scent of cardboard boxes that hadn't been fully unpacked.", 50, ResetColorField, ResetColorField);
+            delayedText($"This living room was smaller than the old house, but for some reason, the air felt lighter and less suffocating.", 50, ResetColorField, ResetColorField);
             Console.ReadLine();
 
-            delayedText($"{engine.mainCharacterCat.Name} sat on top of a box, staring out the window at a cityscape he didn't recognize.", 50, resetColorField, resetColorField);
-            delayedText($"He no longer saw the garden of the old house. Only tall buildings.", 50, resetColorField, resetColorField);
+            delayedText($"{engine.MainCharacterCat.Name} sat on top of a box, staring out the window at a cityscape he didn't recognize.", 50, ResetColorField, ResetColorField);
+            delayedText($"He no longer saw the garden of the old house. Only tall buildings.", 50, ResetColorField, ResetColorField);
             Console.ReadLine();
 
-            delayedText($"{engine.mainCharacterCat.Name} recalled who {engine.mistress.Name} really was.", 50, resetColorField, resetColorField);
-            delayedText($"During the huge argument on the night of the incident, it was revealed that {engine.mistress.Name} was actually {engine.husband.Name}'s old friend from university.", 50, resetColorField, resetColorField);
+            delayedText($"{engine.MainCharacterCat.Name} recalled who {engine.Mistress.Name} really was.", 50, ResetColorField, ResetColorField);
+            delayedText($"During the huge argument on the night of the incident, it was revealed that {engine.Mistress.Name} was actually {engine.Husband.Name}'s old friend from university.", 50, ResetColorField, ResetColorField);
             Console.ReadLine();
-            delayedText($"They had 'found' each other again on social media three months ago.", 50, resetColorField, resetColorField);
-            delayedText($"It started with liking pictures, then commenting, and finally led to secret meetings at {engine.husband.Name}'s favorite cafe—", 50, resetColorField, resetColorField);
-            delayedText($"the same cafe where {engine.husband.Name} had taken {engine.wife.Name} when they first started dating.", 50, resetColorField, resetColorField);
+            delayedText($"They had 'found' each other again on social media three months ago.", 50, ResetColorField, ResetColorField);
+            delayedText($"It started with liking pictures, then commenting, and finally led to secret meetings at {engine.Husband.Name}'s favorite cafe—", 50, ResetColorField, ResetColorField);
+            delayedText($"the same cafe where {engine.Husband.Name} had taken {engine.Wife.Name} when they first started dating.", 50, ResetColorField, ResetColorField);
             Console.ReadLine();
-            delayedText($"Turns out, {engine.husband.Name} was trying to relive his old romance, but with a different woman.", 50, resetColorField, resetColorField);
-            Console.ReadLine();
-
-            delayedText($"{engine.mistress.Name} wasn't a total stranger; she was the past that {engine.husband.Name} chose to make his future,", 50, resetColorField, resetColorField);
-            delayedText($"destroying the present he had built with {engine.wife.Name}.", 50, resetColorField, resetColorField);
+            delayedText($"Turns out, {engine.Husband.Name} was trying to relive his old romance, but with a different woman.", 50, ResetColorField, ResetColorField);
             Console.ReadLine();
 
-            delayedText($"{engine.mainCharacterCat.Name} meowed softly. His heart felt heavy.", 70, resetColorField, resetColorField);
+            delayedText($"{engine.Mistress.Name} wasn't a total stranger; she was the past that {engine.Husband.Name} chose to make his future,", 50, ResetColorField, ResetColorField);
+            delayedText($"destroying the present he had built with {engine.Wife.Name}.", 50, ResetColorField, ResetColorField);
             Console.ReadLine();
 
-            delayedText($"Truthfully, {engine.mainCharacterCat.Name} was sad. What cat wouldn't be sad seeing his family broken apart?", 50, resetColorField, resetColorField);
-            delayedText($"He missed the times {engine.husband.Name} stroked his head while watching football.", 50, resetColorField, resetColorField);
-            delayedText($"He missed the couple's laughter that once filled the living room.", 50, resetColorField, resetColorField);
+            delayedText($"{engine.MainCharacterCat.Name} meowed softly. His heart felt heavy.", 70, ResetColorField, ResetColorField);
             Console.ReadLine();
 
-            delayedText($"But {engine.mainCharacterCat.Name} knew he couldn't let the deception continue.", 50, resetColorField, resetColorField);
-            delayedText($"He couldn't bear to see {engine.wife.Name}—the owner who loved him the most, who fed him, who nursed him when he was sick—living in a lie.", 50, resetColorField, resetColorField);
+            delayedText($"Truthfully, {engine.MainCharacterCat.Name} was sad. What cat wouldn't be sad seeing his family broken apart?", 50, ResetColorField, ResetColorField);
+            delayedText($"He missed the times {engine.Husband.Name} stroked his head while watching football.", 50, ResetColorField, ResetColorField);
+            delayedText($"He missed the couple's laughter that once filled the living room.", 50, ResetColorField, ResetColorField);
             Console.ReadLine();
-            delayedText($"To {engine.mainCharacterCat.Name}, loyalty was everything.", 70, resetColorField, resetColorField);
-            delayedText($"If the Head of the House was willing to betray that trust, he didn't deserve to be part of the family anymore.", 50, resetColorField, resetColorField);
+
+            delayedText($"But {engine.MainCharacterCat.Name} knew he couldn't let the deception continue.", 50, ResetColorField, ResetColorField);
+            delayedText($"He couldn't bear to see {engine.Wife.Name}—the owner who loved him the most, who fed him, who nursed him when he was sick—living in a lie.", 50, ResetColorField, ResetColorField);
             Console.ReadLine();
-            delayedText($"Let this home be a little quieter, as long as there was no more betrayal.", 50, resetColorField, resetColorField);
+            delayedText($"To {engine.MainCharacterCat.Name}, loyalty was everything.", 70, ResetColorField, ResetColorField);
+            delayedText($"If the Head of the House was willing to betray that trust, he didn't deserve to be part of the family anymore.", 50, ResetColorField, ResetColorField);
+            Console.ReadLine();
+            delayedText($"Let this home be a little quieter, as long as there was no more betrayal.", 50, ResetColorField, ResetColorField);
             Console.ReadLine();
             Console.Clear();
 
-            delayedText($"The door opened.", 70, resetColorField, resetColorField);
-            delayedText($"{engine.wife.Name} walked in.", 50, resetColorField, resetColorField);
-            delayedText($"Her face looked calmer than it had in weeks, even though her eyes were still slightly puffy.", 50, resetColorField, resetColorField);
-            delayedText($"She saw {engine.mainCharacterCat.Name} sitting quietly on the box by the window.", 50, resetColorField, resetColorField);
+            delayedText($"The door opened.", 70, ResetColorField, ResetColorField);
+            delayedText($"{engine.Wife.Name} walked in.", 50, ResetColorField, ResetColorField);
+            delayedText($"Her face looked calmer than it had in weeks, even though her eyes were still slightly puffy.", 50, ResetColorField, ResetColorField);
+            delayedText($"She saw {engine.MainCharacterCat.Name} sitting quietly on the box by the window.", 50, ResetColorField, ResetColorField);
             Console.ReadLine();
 
-            engine.wife.displayDialogue($"\"{engine.mainCharacterCat.Name}...\"", 80, resetColorField, resetColorField);
+            engine.Wife.displayDialogue($"\"{engine.MainCharacterCat.Name}...\"", 80, ResetColorField, ResetColorField);
             Console.ReadLine();
 
-            delayedText($"{engine.mainCharacterCat.Name} trotted over to {engine.wife.Name}, rubbing his body gently against her legs.", 50, resetColorField, resetColorField);
+            delayedText($"{engine.MainCharacterCat.Name} trotted over to {engine.Wife.Name}, rubbing his body gently against her legs.", 50, ResetColorField, ResetColorField);
             Console.ReadLine();
 
-            delayedText($"{engine.wife.Name} picked {engine.mainCharacterCat.Name} up and hugged him tight.", 50, resetColorField, resetColorField);
-            engine.wife.displayDialogue($"\"Now it's just the two of us, {engine.mainCharacterCat.Name}.\"", 60, resetColorField, resetColorField);
-            engine.wife.displayDialogue($"\"Thank you for 'telling' Mama that day. If you hadn't... who knows how long I would have been fooled.\"", 60, resetColorField, resetColorField);
+            delayedText($"{engine.Wife.Name} picked {engine.MainCharacterCat.Name} up and hugged him tight.", 50, ResetColorField, ResetColorField);
+            engine.Wife.displayDialogue($"\"Now it's just the two of us, {engine.MainCharacterCat.Name}.\"", 60, ResetColorField, ResetColorField);
+            engine.Wife.displayDialogue($"\"Thank you for 'telling' Mama that day. If you hadn't... who knows how long I would have been fooled.\"", 60, ResetColorField, ResetColorField);
             Console.ReadLine();
 
-            delayedText($"{engine.wife.Name} kissed {engine.mainCharacterCat.Name} softly on the head.", 50, resetColorField, resetColorField);
+            delayedText($"{engine.Wife.Name} kissed {engine.MainCharacterCat.Name} softly on the head.", 50, ResetColorField, ResetColorField);
             Console.ReadLine();
-            delayedText($"Outside the window, a light rain began to fall...", 70, resetColorField, resetColorField);
-            delayedText($"...as if washing away all the dirt and bitter memories of the old house,", 50, resetColorField, resetColorField);
-            delayedText($"giving them both a chance to start a new life.", 50, resetColorField, resetColorField);
+            delayedText($"Outside the window, a light rain began to fall...", 70, ResetColorField, ResetColorField);
+            delayedText($"...as if washing away all the dirt and bitter memories of the old house,", 50, ResetColorField, ResetColorField);
+            delayedText($"giving them both a chance to start a new life.", 50, ResetColorField, ResetColorField);
             Console.ReadLine();
 
-            delayedText($"{engine.mainCharacterCat.Name} closed his eyes, feeling safe in his owner's arms.", 60, resetColorField, resetColorField);
-            delayedText($"He knew he had done the right thing.", 80, resetColorField, resetColorField);
+            delayedText($"{engine.MainCharacterCat.Name} closed his eyes, feeling safe in his owner's arms.", 60, ResetColorField, ResetColorField);
+            delayedText($"He knew he had done the right thing.", 80, ResetColorField, ResetColorField);
             Console.ReadLine();
             Console.Clear();
 
@@ -1546,9 +1506,8 @@ namespace Project_OOP_2._0
 
             =======================================================
         ";
-            delayedText(ending, 40, Tangerine, resetColorField);
+            delayedText(ending, 40, Tangerine, ResetColorField);
             Console.ReadLine();
         }
     }
 }
-
