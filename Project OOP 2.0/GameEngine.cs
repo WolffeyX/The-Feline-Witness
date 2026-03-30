@@ -193,8 +193,8 @@ namespace Project_OOP_2._0
 
         public void playGame()
         {
-            //intro.playScene(this);
-            //scene1.playScene(this);
+            intro.playScene(this);
+            scene1.playScene(this);
             scene2.playScene(this);
             scene3.playScene(this);
             scene4.playScene(this);
