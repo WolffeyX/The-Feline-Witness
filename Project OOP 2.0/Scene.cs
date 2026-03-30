@@ -1217,7 +1217,7 @@ namespace Project_OOP_2._0
                     delayedText($"[GAME OVER] {engine.MainCharacterCat.Name} was defeated... Restarting from the checkpoint...", 50, ResetColorField, ResetColorField);
                     Thread.Sleep(2000);
                     engine.MainCharacterCat.HP = 80;
-                    engine.GreyCat.HP = 80;
+                    engine.WhiteCat.HP = 80;
                     continue;
                 }
                 completeCombat2 = true;
