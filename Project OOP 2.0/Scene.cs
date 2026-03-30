@@ -999,11 +999,11 @@ namespace Project_OOP_2._0
 
             delayedText($"After locking the cage,{engine.Husband.Name} took out his phone and called {engine.Mistress.Name}.", 50, ResetColorField, ResetColorField);
 
-            engine.Mistress.displayDialogue($"\"Hey babe, I had some issues earlier... I'm just starting to bake now. Can you come a bit later? Maybe 5 PM?\"", 50, ResetColorField, ResetColorField);
+            engine.Husband.displayDialogue($"\"Hey babe, I had some issues earlier... I'm just starting to bake now. Can you come a bit later? Maybe 5 PM?\"", 50, ResetColorField, ResetColorField);
 
-            engine.Husband.displayDialogue($"\"Oh, okay...\"", 50, ResetColorField, ResetColorField);
+            engine.Mistress.displayDialogue($"\"Oh, okay...\"", 50, ResetColorField, ResetColorField);
 
-            engine.Mistress.displayDialogue($"\"Okay baby, bye...\"", 50, ResetColorField, ResetColorField);
+            engine.Husband.displayDialogue($"\"Okay baby, bye...\"", 50, ResetColorField, ResetColorField);
 
             delayedText($"{engine.MainCharacterCat.Name} heard the conversation.", 50, ResetColorField, ResetColorField);
 
