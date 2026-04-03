@@ -590,11 +590,12 @@ namespace Project_OOP_2._0
                             SCENE 2: THE MEETUP
             =======================================================
             ";
+            engine.MainCharacterCat.CurrentLocation = engine.HouseSpaceList[5];
             delayedText(scene2, 10, Tangerine, ResetColorField);
             engine.Husband.displayDialogue($"\"get up {engine.MainCharacterCat.Name}. Papa wants to shower...\"", 50, ResetColorField, ResetColorField);
             delayedText($"{engine.MainCharacterCat.Name} finally snapped out of his shock. He jumped down from the sofa to the floor.", 50, ResetColorField, ResetColorField);
             engine.Husband.displayDialogue($"\"Shower, then go buy groceries, then bake the cake, then she comes over... wow, it's gonna be a great day\"", 50, ResetColorField, ResetColorField);
-            delayedText($"{engine.MainCharacterCat.Name} knew he had to stop this meeting. He thought of hiding the car keys. ", 50, ResetColorField, ResetColorField);
+            delayedText($"{engine.MainCharacterCat.Name} knew he had to stop this meeting. He thought of hiding the car keys, so {engine.Husband.Name} can't go buy ingredients for the cake! ", 50, ResetColorField, ResetColorField);
             Console.WriteLine("\n===========================================================================");
             Console.WriteLine($"MISSION: Find {engine.Husband.Name}'s car key");
             Console.WriteLine($"Hint: It is located on a thing, that people always put another things on it");
@@ -930,7 +931,7 @@ namespace Project_OOP_2._0
 
             delayedText(scene4, 10, Tangerine, ResetColorField);
 
-            delayedText($"Upon returning home, {engine.Husband.Name} was shocked to see cat food scattered all over the garage floor", 50, ResetColorField, ResetColorField);
+            delayedText($"Upon returning home after buying ingredients to bake the cake, {engine.Husband.Name} was shocked to see cat food scattered all over the garage floor", 50, ResetColorField, ResetColorField);
 
             engine.Husband.displayDialogue($"\"Hah! How did the cat food bag get torn? And it's everywhere!\"", 50, ResetColorField, ResetColorField);
 
@@ -1032,7 +1033,7 @@ namespace Project_OOP_2._0
         public override bool validateAction(SecondaryItem item, ActionType action)
         {
             bool isValid = false;
-            if (item.Name == "CCTV wire" && action == ActionType.Shove)
+            if (item.Name == "CCTV wire" && action == ActionType.Push)
             {
                 isValid = true;
             }
@@ -1384,7 +1385,7 @@ namespace Project_OOP_2._0
                         else
                         {
                             damageDealt = rng.Next(20, 41);
-                            delayedText($"{playerCat.Name} lands a devastating {Cat.FightingOptions.Claw}! Deals {damageDealt} damage.", 20, ResetColorField, ResetColorField);
+                            delayedText($"{playerCat.Name} lands a devastating {Cat.FightingOptions.Bite}! Deals {damageDealt} damage.", 20, ResetColorField, ResetColorField);
                         }
                         break;
                     default:

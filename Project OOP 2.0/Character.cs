@@ -83,7 +83,7 @@ namespace Project_OOP_2._0
     {
         public enum ActionType
         {
-            Observe, Grab, Bury, Claw, Shove, Scatter
+            Observe, Grab, Bury, Claw, Shove, Push, Scatter
         }
 
         public enum FightingOptions
