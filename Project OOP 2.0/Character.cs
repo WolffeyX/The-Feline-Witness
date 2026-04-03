@@ -13,12 +13,14 @@ namespace Project_OOP_2._0
         // 1. Private Fields
         private string name;
         private int hp;
+        private string characterColor;
+        private string resetColor = "\x1b[0m";
 
         // 2. Public Properties
         public string Name
         {
             get { return name; }
-            set { name = value; }
+            set { name = characterColor + value + resetColor; }
         }
 
         public int HP
@@ -39,6 +41,12 @@ namespace Project_OOP_2._0
                     hp = value;
                 }
             }
+        }
+
+        public string CharacterColor
+        {
+            get { return characterColor; }
+            set { characterColor = value; }
         }
 
         // 3. Methods
@@ -77,6 +85,11 @@ namespace Project_OOP_2._0
             Console.Write(resetColor);
             Console.WriteLine();
         }
+
+        public Character(string givenCharacterColor)
+        {
+            CharacterColor = givenCharacterColor;
+        }
     }
 
     internal class Cat : Character //OOP Concept applied: INHERITANCE (Cat is a subclass of Character)
@@ -103,7 +116,7 @@ namespace Project_OOP_2._0
             set { catFightingOptions = value; }
         }
 
-        public Cat()
+        public Cat(string givenCharacterColor) : base(givenCharacterColor)
         {
             this.HP = 100;
         }
@@ -127,6 +140,10 @@ namespace Project_OOP_2._0
         {
             get { return carryingItem; }
             set { carryingItem = value; }
+        }
+
+        public MainCharacter(string givenCharacterColor) : base(givenCharacterColor)
+        {
         }
     }
 }

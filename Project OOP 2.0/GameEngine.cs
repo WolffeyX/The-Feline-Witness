@@ -108,12 +108,12 @@ namespace Project_OOP_2._0
         public GameEngine()
         {
             this.House = new House();
-            this.MainCharacterCat = new MainCharacter();
-            this.Husband = new Character();
-            this.Wife = new Character();
-            this.Mistress = new Character();
-            this.GreyCat = new Cat();
-            this.WhiteCat = new Cat();
+            this.MainCharacterCat = new MainCharacter("\x1b[38;2;255;153;51m");
+            this.Husband = new Character("\x1b[38;2;47;19;209m");
+            this.Wife = new Character("\x1b[38;2;230;55;224m");
+            this.Mistress = new Character("\x1b[38;2;235;23;45m");
+            this.GreyCat = new Cat("\x1b[38;2;92;90;90m");
+            this.WhiteCat = new Cat("\x1b[38;2;235;232;232m");
             this.HouseSpaceList = new List<HouseSpace>();
 
             this.SetupHouseItems();

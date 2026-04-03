@@ -408,7 +408,7 @@ namespace Project_OOP_2._0
 
             ValidateActionResult = false;
             Console.Clear();
-            delayedText($"There was a woman's name displayed on the husband's phone screen, and {engine.Husband.Name} was texting to that person. ", 50, ResetColorField, ResetColorField);
+            delayedText($"There was a woman's name displayed on {engine.Husband.Name}'s phone screen, and {engine.Husband.Name} was texting to that person. ", 50, ResetColorField, ResetColorField);
             delayedText($"Give this woman a name.", 50, ResetColorField, ResetColorField);
             getName(engine.Mistress, "mistress");
             Console.WriteLine();
@@ -547,7 +547,14 @@ namespace Project_OOP_2._0
                             var actions = Enum.GetValues(typeof(ActionType)).Cast<ActionType>().ToList();
                             for (int i = 0; i < actions.Count; i++)
                             {
-                                Console.WriteLine($"{i + 1}. {actions[i]}");
+                                if (i == 2)
+                                {
+                                    Console.WriteLine($"{i + 1}. {actions[i]} the car key");
+                                }
+                                else
+                                {
+                                    Console.WriteLine($"{i + 1}. {actions[i]}");
+                                }
                             }
                             Console.Write("Select action number: ");
                             if (int.TryParse(Console.ReadLine(), out int actionChoice) && actionChoice >= 1 && actionChoice <= actions.Count)
@@ -595,7 +602,8 @@ namespace Project_OOP_2._0
             engine.Husband.displayDialogue($"\"get up {engine.MainCharacterCat.Name}. Papa wants to shower...\"", 50, ResetColorField, ResetColorField);
             delayedText($"{engine.MainCharacterCat.Name} finally snapped out of his shock. He jumped down from the sofa to the floor.", 50, ResetColorField, ResetColorField);
             engine.Husband.displayDialogue($"\"Shower, then go buy groceries, then bake the cake, then she comes over... wow, it's gonna be a great day\"", 50, ResetColorField, ResetColorField);
-            delayedText($"{engine.MainCharacterCat.Name} knew he had to stop this meeting. He thought of hiding the car keys, so {engine.Husband.Name} can't go buy ingredients for the cake! ", 50, ResetColorField, ResetColorField);
+            delayedText($"{engine.Husband.Name} went to the bathroom to take a shower.", 50, ResetColorField, ResetColorField);
+            delayedText($"{engine.MainCharacterCat.Name} knew he had to stop this meeting. He thought of hiding the car keys while {engine.Husband.Name} was showering, so {engine.Husband.Name} can't go buy ingredients for the cake! ", 50, ResetColorField, ResetColorField);
             Console.WriteLine("\n===========================================================================");
             Console.WriteLine($"MISSION: Find {engine.Husband.Name}'s car key");
             Console.WriteLine($"Hint: It is located on a thing, that people always put another things on it");
@@ -980,7 +988,7 @@ namespace Project_OOP_2._0
             delayedText($"It saw a carton of eggs inside the grocery bag, located on top of the bar table.", 50, ResetColorField, ResetColorField);
             Console.Clear();
 
-            delayedText($"With all his might, it leaped and shoved the GroceryBag off the kitchen's bar table.", 50, ResetColorField, ResetColorField);
+            delayedText($"With all his might, it leaped and shoved the grocery bag off the kitchen's bar table.", 50, ResetColorField, ResetColorField);
 
             delayedText($"SPLAT.", 50, ResetColorField, ResetColorField);
 
@@ -1142,7 +1150,7 @@ namespace Project_OOP_2._0
             delayedText("At 5:07 PM, a blue car arrived and parked in front of the gate.", 50, ResetColorField, ResetColorField);
             delayedText($"{engine.MainCharacterCat.Name} watched as {engine.Husband.Name} opened the gate. The car pulled into the garage. A woman stepped out.", 50, ResetColorField, ResetColorField);
             delayedText($"\"Baby..!\" said {engine.Husband.Name}.", 50, ResetColorField, ResetColorField);
-            delayedText("\"Yeah baby...... wow, nice house, eh\" the woman replied.", 50, ResetColorField, ResetColorField);
+            delayedText("\"Yeah baby...... wow, nice house...\" the woman replied.", 50, ResetColorField, ResetColorField);
             Console.ReadLine();
             delayedText($"\"Come inside. Are you ready to taste my White Chocolate Macadamia cake?\"", 50, ResetColorField, ResetColorField);
             delayedText($"\"Ready! I hope it tastes really good. Eh, a cat! You have a cat too?\" the woman asked, pointing at the cage.", 50, ResetColorField, ResetColorField);
@@ -1422,7 +1430,7 @@ namespace Project_OOP_2._0
             =======================================================
         ";
 
-            delayedText(scene6Banner, 10, ResetColorField, ResetColorField);
+            delayedText(scene6Banner, 10, Tangerine, ResetColorField);
             Console.ReadLine();
             delayedText("One Month Later...", 100, ResetColorField, ResetColorField);
             Console.ReadLine();
