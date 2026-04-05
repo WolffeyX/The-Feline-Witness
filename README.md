@@ -30,8 +30,8 @@ The game places the player in the unique perspective of a household pet cat. Aft
 1. Encapsulation
    Data such as player health and inventory is protected using private variables and controlled through methods.
    Example:
-   • StatusIndicator manages HP
-   • MainCharacter stores current location and carried item
+   • The `Cat` class manages `HP` safely, ensuring it never exceeds 100 or drops below 0.
+   • The `MainCharacter` class securely stores and updates the `CurrentLocation` of the player.
 
 2. Inheritance
    The system uses hierarchical class structures to reuse code efficiently.
@@ -50,7 +50,7 @@ The game places the player in the unique perspective of a household pet cat. Aft
    Example:
    • Scene class
 
-## ⚙️ Installation & Setup Guide
+## Installation & Setup Guide
 
 ### Prerequisites
 
@@ -70,3 +70,29 @@ To run this game smoothly without any compatibility issues, you will need:
    Press **F5** or click the **Start** button in Visual Studio to compile and launch the game console.
 4. **Play:**
    Follow the on-screen menu prompts. Type the corresponding numbers or characters and press Enter to navigate the house and interact with items.
+
+## Project File Structure
+
+Below is the breakdown of the C# files used in this project and the classes they contain:
+
+- **`Program.cs`**
+  - Contains the `Program` class.
+  - This is the entry point of the application containing the `Main` method, which initializes the `GameEngine` and starts the game.
+- **`GameEngine.cs`**
+  - Contains the `GameEngine` class.
+  - Acts as the core controller of the game. It handles the instantiation of all characters, sets up the house items (`SetupHouseItems`), and sequences the scenes to run the game loop.
+- **`Character.cs`**
+  - Contains the `Character` (Base), `Cat` (Child), and `MainCharacter` (Grandchild) classes.
+  - Handles all entity data, including health points (`HP`), fighting options, names, and the dynamic typing-effect dialogue system.
+- **`House.cs`**
+  - Contains the `House` class.
+  - Stores the visual ASCII map of the house and contains the method to display it to the player.
+- **`HouseSpace.cs`**
+  - Contains the `HouseSpace` class.
+  - Represents the different rooms in the game (e.g., Garage, Living Room). It holds a collection (List) of `PrimaryItem` objects available in that specific room.
+- **`Item.cs`**
+  - Contains the `Item` (Abstract Base), `PrimaryItem` (Child), and `SecondaryItem` (Child) classes.
+  - Represents all interactable objects. `PrimaryItem` acts as main furniture (e.g., TV Cabinet), which can hold a list of `SecondaryItem` objects (e.g., CCTV wire, Keys).
+- **`Scene.cs`**
+  - Contains the `Scene` (Abstract Base) class and all its derived level classes (`IntroScene`, `Scene1` through `Scene6`).
+  - This is the largest file, containing the core gameplay loop, the exploration mechanics (`exploreHouse`), the combat system (`CombatLoop`), the mini-games, and all the story dialogues for every chapter of the game.
