@@ -2,14 +2,14 @@
 
 ## Group Members
 
-• Ahmad Zafran Bin Faizal (24005345)
-• Muhammad Wafi Bin Azman (24005379)
-• Muhammad Asyraaf Bin Mustafa 24005305
-• Humaira Rayyan Binti Haslah (24005364)
-• Lee Xin Yue (24005697)
-• Amier Aiman Bin Mohamad Faizal (24005402)
+1. Ahmad Zafran Bin Faizal (24005345)
+2. Muhammad Wafi Bin Azman (24005379)
+3. Muhammad Asyraaf Bin Mustafa 24005305
+4. Humaira Rayyan Binti Haslah (24005364)
+5. Lee Xin Yue (24005697)
+6. Amier Aiman Bin Mohamad Faizal (24005402)
 
-## Brief Description
+## Brief Project Description
 
 **The Feline Witness** is a menu-driven, console-based interactive fiction game built entirely in C#.
 
@@ -17,13 +17,13 @@ The game places the player in the unique perspective of a household pet cat. Aft
 
 ## System Features
 
-• Interactive house exploration system
-• Scene-based gameplay (Intro–Scene6)
-• Player-controlled character (MainCharacter Cat)
-• Object interaction system (Primary & Secondary Items)
-• Turn-based combat system (Scene 5)
-• Dynamic dialogue system with typing effect
-• Mission-based progression system
+1. Interactive house exploration system
+2. Scene-based gameplay (Intro–Scene6)
+3. Player-controlled character (MainCharacter Cat)
+4. Object interaction system (Primary & Secondary Items)
+5. Turn-based combat system (Scene 5)
+6. Dynamic dialogue system with typing effect
+7. Mission-based progression system
 
 ## OOP Concepts Used
 

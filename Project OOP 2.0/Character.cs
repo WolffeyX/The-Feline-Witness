@@ -12,7 +12,6 @@ namespace Project_OOP_2._0
         //OOP Concept applied: ENCAPSULATION (private fields, and public properties)
         // 1. Private Fields
         private string name;
-        private int hp;
         private string characterColor;
         private string resetColor = "\x1b[0m";
 
@@ -21,26 +20,6 @@ namespace Project_OOP_2._0
         {
             get { return name; }
             set { name = characterColor + value + resetColor; }
-        }
-
-        public int HP
-        {
-            get { return hp; }
-            set
-            {
-                if (value > 100)
-                {
-                    hp = 100;
-                }
-                else if (value < 0)
-                {
-                    hp = 0;
-                }
-                else
-                {
-                    hp = value;
-                }
-            }
         }
 
         public string CharacterColor
@@ -108,12 +87,33 @@ namespace Project_OOP_2._0
 
         // Private Fields
         private FightingOptions catFightingOptions;
+        private int hp;
 
-        // Public Properties
+        // Public Property
         public FightingOptions CatFightingOptions
         {
             get { return catFightingOptions; }
             set { catFightingOptions = value; }
+        }
+
+        public int HP
+        {
+            get { return hp; }
+            set
+            {
+                if (value > 100)
+                {
+                    hp = 100;
+                }
+                else if (value < 0)
+                {
+                    hp = 0;
+                }
+                else
+                {
+                    hp = value;
+                }
+            }
         }
 
         public Cat(string givenCharacterColor) : base(givenCharacterColor)
@@ -125,21 +125,14 @@ namespace Project_OOP_2._0
     internal class MainCharacter : Cat //OOP Concept applied: INHERITANCE (MainCharacter is a subclass of Cat)
     {
         //OOP Concept applied: ENCAPSULATION (private fields, and public properties)
-        // Private Fields
+        // Private Field
         private HouseSpace currentLocation;
-        private SecondaryItem carryingItem; 
 
-        // Public Properties
+        // Public Property
         public HouseSpace CurrentLocation
         {
             get { return currentLocation; }
             set { currentLocation = value; }
-        }
-
-        public SecondaryItem CarryingItem
-        {
-            get { return carryingItem; }
-            set { carryingItem = value; }
         }
 
         public MainCharacter(string givenCharacterColor) : base(givenCharacterColor)
